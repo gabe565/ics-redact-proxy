@@ -21,12 +21,18 @@ func ICS(conf *config.Config) http.HandlerFunc {
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
 			log.Err(err).Msg("Failed to get ics")
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			http.Error(w, http.StatusText(http.StatusServiceUnavailable), http.StatusServiceUnavailable)
 			return
 		}
 		defer func() {
 			_ = resp.Body.Close()
 		}()
+
+		if resp.StatusCode >= 400 {
+			log.Err(err).Str("status", resp.Status).Msg("Upstream returned error")
+			http.Error(w, http.StatusText(resp.StatusCode), resp.StatusCode)
+			return
+		}
 
 		cal, err := ics.ParseCalendar(resp.Body)
 		if err != nil {
