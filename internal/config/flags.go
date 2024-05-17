@@ -8,8 +8,9 @@ const (
 	FlagLogLevel  = "log-level"
 	FlagLogFormat = "log-format"
 
-	ListenAddrFlag = "listen-addr"
-	TokenFlag      = "token"
+	ICSAddrFlag = "ics-addr"
+	APIAddrFlag = "api-addr"
+	TokenFlag   = "token"
 
 	SourceURLFlag       = "source-url"
 	AllowedFieldsFlag   = "allowed-fields"
@@ -21,7 +22,8 @@ func (c *Config) RegisterFlags(f *pflag.FlagSet) {
 	f.StringVarP(&c.LogLevel, FlagLogLevel, "l", c.LogLevel, "Log level (trace, debug, info, warn, error, fatal, panic)")
 	f.StringVar(&c.LogFormat, FlagLogFormat, c.LogFormat, "Log format (auto, color, plain, json)")
 
-	f.StringVar(&c.ListenAddress, ListenAddrFlag, c.ListenAddress, "HTTP listen address")
+	f.StringVar(&c.APIAddr, APIAddrFlag, c.APIAddr, "API listen address")
+	f.StringVar(&c.ICSAddr, ICSAddrFlag, c.ICSAddr, "ICS listen address")
 	f.StringArrayVar(&c.Tokens, TokenFlag, c.Tokens, "Enables token auth (requests will require a `token` GET parameter)")
 
 	f.StringVar(&c.SourceURL, SourceURLFlag, c.SourceURL, "Source iCal URL")

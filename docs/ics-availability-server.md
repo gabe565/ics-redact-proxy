@@ -10,8 +10,9 @@ ics-availability-server [flags]
 
 ```
       --allowed-fields stringArray   Allowed ics fields (default [DTSTART,DTEND,DTSTAMP,UID,CREATED,LAST-MODIFIED,SEQUENCE,STATUS,TRANSP])
+      --api-addr string              API listen address (default ":6060")
   -h, --help                         help for ics-availability-server
-      --listen-addr string           HTTP listen address (default ":3000")
+      --ics-addr string              ICS listen address (default ":3000")
       --log-format string            Log format (auto, color, plain, json) (default "auto")
   -l, --log-level string             Log level (trace, debug, info, warn, error, fatal, panic) (default "info")
       --new-calendar-name string     Replacement calendar name

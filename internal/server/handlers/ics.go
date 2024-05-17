@@ -9,9 +9,9 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func ICS(c *config.Config) http.HandlerFunc {
+func ICS(conf *config.Config) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		req, err := http.NewRequestWithContext(r.Context(), http.MethodGet, c.SourceURL, nil)
+		req, err := http.NewRequestWithContext(r.Context(), http.MethodGet, conf.SourceURL, nil)
 		if err != nil {
 			log.Err(err).Msg("Failed create ics request")
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -37,16 +37,16 @@ func ICS(c *config.Config) http.HandlerFunc {
 
 		for _, event := range cal.Events() {
 			event.Properties = slices.DeleteFunc(event.Properties, func(property ics.IANAProperty) bool {
-				return !slices.Contains(c.AllowedFields, property.IANAToken)
+				return !slices.Contains(conf.AllowedFields, property.IANAToken)
 			})
 
-			if c.NewEventSummary != "" {
-				event.SetSummary(c.NewEventSummary)
+			if conf.NewEventSummary != "" {
+				event.SetSummary(conf.NewEventSummary)
 			}
 		}
 
-		if c.NewCalendarName != "" {
-			cal.SetName(c.NewCalendarName)
+		if conf.NewCalendarName != "" {
+			cal.SetName(conf.NewCalendarName)
 		}
 
 		w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
