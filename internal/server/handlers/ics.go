@@ -50,6 +50,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 
 		if err := cal.SerializeTo(w); err != nil {
 			log.Err(err).Msg("Failed to write ics")
