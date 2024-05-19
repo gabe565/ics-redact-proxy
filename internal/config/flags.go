@@ -24,10 +24,10 @@ func (c *Config) RegisterFlags(f *pflag.FlagSet) {
 
 	f.StringVar(&c.APIAddr, APIAddrFlag, c.APIAddr, "API listen address")
 	f.StringVar(&c.ICSAddr, ICSAddrFlag, c.ICSAddr, "ICS listen address")
-	f.StringArrayVar(&c.Tokens, TokenFlag, c.Tokens, "Enables token auth (requests will require a `token` GET parameter)")
+	f.StringSliceVar(&c.Tokens, TokenFlag, c.Tokens, "Enables token auth (requests will require a `token` GET parameter)")
 
 	f.StringVar(&c.SourceURL, SourceURLFlag, c.SourceURL, "Source iCal URL")
-	f.StringArrayVar(&c.AllowedFields, AllowedFieldsFlag, c.AllowedFields, "Allowed ics fields")
+	f.StringSliceVar(&c.AllowedFields, AllowedFieldsFlag, c.AllowedFields, "Allowed ics fields")
 	f.StringVar(&c.NewCalendarName, NewCalendarNameFlag, c.NewCalendarName, "Replacement calendar name")
 	f.StringVar(&c.NewEventSummary, NewEventSummaryFlag, c.NewEventSummary, "Replacement event summary")
 }
