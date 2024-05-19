@@ -13,10 +13,10 @@ type Config struct {
 	ICSAddr string
 	Tokens  []string
 
-	SourceURL       string
-	AllowedFields   []string
-	NewCalendarName string
-	NewEventSummary string
+	SourceURL        string
+	EventAllowFields []string
+	NewCalendarName  string
+	NewEventSummary  string
 }
 
 func New() *Config {
@@ -27,7 +27,7 @@ func New() *Config {
 		APIAddr: ":6060",
 		ICSAddr: ":3000",
 
-		AllowedFields: []string{
+		EventAllowFields: []string{
 			string(ics.ComponentPropertyDtStart),
 			string(ics.ComponentPropertyDtEnd),
 			string(ics.ComponentPropertyDtstamp),

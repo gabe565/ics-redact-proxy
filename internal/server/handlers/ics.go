@@ -43,7 +43,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 
 		for _, event := range cal.Events() {
 			event.Properties = slices.DeleteFunc(event.Properties, func(property ics.IANAProperty) bool {
-				return !slices.Contains(conf.AllowedFields, property.IANAToken)
+				return !slices.Contains(conf.EventAllowFields, property.IANAToken)
 			})
 
 			if conf.NewEventSummary != "" {

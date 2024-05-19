@@ -12,10 +12,10 @@ const (
 	APIAddrFlag = "api-addr"
 	TokenFlag   = "token"
 
-	SourceURLFlag       = "source-url"
-	AllowedFieldsFlag   = "allowed-fields"
-	NewCalendarNameFlag = "new-calendar-name"
-	NewEventSummaryFlag = "new-event-summary"
+	SourceURLFlag        = "source-url"
+	EventAllowFieldsFlag = "event-allow-fields"
+	NewCalendarNameFlag  = "new-calendar-name"
+	NewEventSummaryFlag  = "new-event-summary"
 )
 
 func (c *Config) RegisterFlags(f *pflag.FlagSet) {
@@ -27,7 +27,7 @@ func (c *Config) RegisterFlags(f *pflag.FlagSet) {
 	f.StringSliceVar(&c.Tokens, TokenFlag, c.Tokens, "Enables token auth (requests will require a `token` GET parameter)")
 
 	f.StringVar(&c.SourceURL, SourceURLFlag, c.SourceURL, "Source iCal URL")
-	f.StringSliceVar(&c.AllowedFields, AllowedFieldsFlag, c.AllowedFields, "Allowed ics fields")
+	f.StringSliceVar(&c.EventAllowFields, EventAllowFieldsFlag, c.EventAllowFields, "Allowed event fields")
 	f.StringVar(&c.NewCalendarName, NewCalendarNameFlag, c.NewCalendarName, "Replacement calendar name")
 	f.StringVar(&c.NewEventSummary, NewEventSummaryFlag, c.NewEventSummary, "Replacement event summary")
 }
