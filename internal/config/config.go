@@ -9,9 +9,8 @@ type Config struct {
 	LogLevel  string
 	LogFormat string
 
-	APIAddr string
-	ICSAddr string
-	Tokens  []string
+	Addr   string
+	Tokens []string
 
 	SourceURL        string
 	EventAllowFields []string
@@ -24,8 +23,7 @@ func New() *Config {
 		LogLevel:  zerolog.InfoLevel.String(),
 		LogFormat: "auto",
 
-		APIAddr: ":6060",
-		ICSAddr: ":3000",
+		Addr: ":3000",
 
 		EventAllowFields: []string{
 			string(ics.ComponentPropertyDtStart),
