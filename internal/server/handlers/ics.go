@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"io"
 	"net/http"
 	"slices"
 
@@ -25,6 +26,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			return
 		}
 		defer func() {
+			_, _ = io.Copy(io.Discard, resp.Body)
 			_ = resp.Body.Close()
 		}()
 
