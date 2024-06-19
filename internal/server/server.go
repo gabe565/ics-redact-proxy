@@ -22,9 +22,10 @@ func ListenAndServe(ctx context.Context, conf *config.Config) error {
 	r.Use(icsmiddleware.Log)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
-	r.Use(icsmiddleware.Token(conf.Tokens...))
+	r.Get("/robots.txt", handlers.RobotsTxt)
 
-	r.Get("/*", handlers.ICS(conf))
+	r.With(icsmiddleware.Token(conf.Tokens...)).
+		Get("/*", handlers.ICS(conf))
 
 	server := &http.Server{
 		Addr:           conf.Addr,
