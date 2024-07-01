@@ -29,7 +29,7 @@ func ListenAndServe(ctx context.Context, conf *config.Config) error {
 		Get("/*", handlers.ICS(conf))
 
 	server := &http.Server{
-		Addr:           conf.Addr,
+		Addr:           conf.ListenAddress,
 		Handler:        r,
 		ReadTimeout:    10 * time.Second,
 		MaxHeaderBytes: 1024 * 1024, // 1MiB
@@ -38,13 +38,13 @@ func ListenAndServe(ctx context.Context, conf *config.Config) error {
 	group, ctx := errgroup.WithContext(ctx)
 
 	group.Go(func() error {
-		log.Info().Str("address", conf.Addr).Msg("Starting server")
+		log.Info().Str("address", conf.ListenAddress).Msg("Starting server")
 		return server.ListenAndServe()
 	})
 
 	group.Go(func() error {
 		<-ctx.Done()
-		log.Info().Str("address", conf.Addr).Msg("Gracefully shutting down server")
+		log.Info().Str("address", conf.ListenAddress).Msg("Gracefully shutting down server")
 		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 60*time.Second)
 		defer shutdownCancel()
 
