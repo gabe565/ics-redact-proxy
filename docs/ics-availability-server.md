@@ -19,5 +19,6 @@ ics-availability-server [flags]
       --real-ip-header               Get client IP address from the "Real-IP" header (default true)
       --source-url string            Source iCal URL
       --token token                  Enables token auth (requests will require a token GET parameter)
+  -v, --version                      version for ics-availability-server
 ```
 

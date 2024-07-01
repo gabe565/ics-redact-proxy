@@ -11,14 +11,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var version = "beta"
+
 func New() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "ics-availability-server",
-		Short: "Fetches an ics file and redacts all data except for configured fields.",
-		RunE:  run,
+		Use:     "ics-availability-server",
+		Short:   "Fetches an ics file and redacts all data except for configured fields.",
+		RunE:    run,
+		Version: buildVersion(version),
 
 		DisableAutoGenTag: true,
 	}
+	cmd.InitDefaultVersionFlag()
 
 	conf := config.New()
 	conf.RegisterFlags(cmd.Flags())
