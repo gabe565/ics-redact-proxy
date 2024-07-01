@@ -14,8 +14,8 @@ ics-availability-server [flags]
       --listen-address string        Listen address (default ":3000")
       --log-format string            Log format (auto, color, plain, json) (default "auto")
   -l, --log-level string             Log level (trace, debug, info, warn, error, fatal, panic) (default "info")
-      --new-calendar-name string     Replaces calendar name
-      --new-event-summary string     Replaces every event summary (default "Unavailable")
+      --new-calendar-name string     If set, calendar name will be changed to this value
+      --new-event-summary string     If set, event summaries will be changed to this value (default "Unavailable")
       --source-url string            Source iCal URL
       --token token                  Enables token auth (requests will require a token GET parameter)
 ```

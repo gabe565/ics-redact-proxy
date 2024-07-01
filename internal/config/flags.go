@@ -30,6 +30,6 @@ func (c *Config) RegisterFlags(f *pflag.FlagSet) {
 
 	f.StringVar(&c.SourceURL, SourceURLFlag, c.SourceURL, "Source iCal URL")
 	f.StringSliceVar(&c.EventAllowFields, EventAllowFieldsFlag, c.EventAllowFields, "Allowed event fields")
-	f.StringVar(&c.NewCalendarName, NewCalendarNameFlag, c.NewCalendarName, "Replaces calendar name")
-	f.StringVar(&c.NewEventSummary, NewEventSummaryFlag, c.NewEventSummary, "Replaces every event summary")
+	f.StringVar(&c.NewCalendarName, NewCalendarNameFlag, c.NewCalendarName, "If set, calendar name will be changed to this value")
+	f.StringVar(&c.NewEventSummary, NewEventSummaryFlag, c.NewEventSummary, "If set, event summaries will be changed to this value")
 }
