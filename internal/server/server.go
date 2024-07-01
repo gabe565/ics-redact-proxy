@@ -18,7 +18,9 @@ import (
 func ListenAndServe(ctx context.Context, conf *config.Config) error {
 	r := chi.NewRouter()
 	r.Use(middleware.Heartbeat("/ping"))
-	r.Use(middleware.RealIP)
+	if conf.RealIPHeader {
+		r.Use(middleware.RealIP)
+	}
 	r.Use(icsmiddleware.Log)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))

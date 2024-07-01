@@ -10,6 +10,7 @@ const (
 
 	ListenAddressFlag = "listen-address"
 	TokenFlag         = "token"
+	RealIPHeaderFlag  = "real-ip-header"
 
 	SourceURLFlag        = "source-url"
 	EventAllowFieldsFlag = "event-allow-fields"
@@ -27,6 +28,7 @@ func (c *Config) RegisterFlags(f *pflag.FlagSet) {
 	}
 	f.StringVar(&c.ListenAddress, ListenAddressFlag, c.ListenAddress, "Listen address")
 	f.StringSliceVar(&c.Tokens, TokenFlag, c.Tokens, "Enables token auth (requests will require a `token` GET parameter)")
+	f.BoolVar(&c.RealIPHeader, RealIPHeaderFlag, c.RealIPHeader, `Get client IP address from the "Real-IP" header`)
 
 	f.StringVar(&c.SourceURL, SourceURLFlag, c.SourceURL, "Source iCal URL")
 	f.StringSliceVar(&c.EventAllowFields, EventAllowFieldsFlag, c.EventAllowFields, "Allowed event fields")

@@ -16,6 +16,7 @@ ics-availability-server [flags]
   -l, --log-level string             Log level (trace, debug, info, warn, error, fatal, panic) (default "info")
       --new-calendar-name string     If set, calendar name will be changed to this value
       --new-event-summary string     If set, event summaries will be changed to this value (default "Unavailable")
+      --real-ip-header               Get client IP address from the "Real-IP" header (default true)
       --source-url string            Source iCal URL
       --token token                  Enables token auth (requests will require a token GET parameter)
 ```

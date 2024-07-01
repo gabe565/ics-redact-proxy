@@ -11,6 +11,7 @@ type Config struct {
 
 	ListenAddress string
 	Tokens        []string
+	RealIPHeader  bool
 
 	SourceURL        string
 	EventAllowFields []string
@@ -24,6 +25,7 @@ func New() *Config {
 		LogFormat: "auto",
 
 		ListenAddress: ":3000",
+		RealIPHeader:  true,
 
 		EventAllowFields: []string{
 			string(ics.ComponentPropertyCreated),
