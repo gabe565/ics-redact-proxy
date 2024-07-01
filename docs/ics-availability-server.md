@@ -9,7 +9,7 @@ ics-availability-server [flags]
 ### Options
 
 ```
-      --event-allow-fields strings   Allowed event fields (default [CREATED,DTEND,DTSTART,DTSTAMP,LAST-MODIFIED,SEQUENCE,STATUS,TRANSP,UID])
+      --event-allow-fields strings   Allowed event fields (default [CREATED,DTEND,DTSTART,DTSTAMP,EXDATE,EXRULE,LAST-MODIFIED,RDATE,RRULE,SEQUENCE,STATUS,TRANSP,UID])
   -h, --help                         help for ics-availability-server
       --listen-address string        Listen address (default ":3000")
       --log-format string            Log format (auto, color, plain, json) (default "auto")
