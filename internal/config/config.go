@@ -22,7 +22,7 @@ type Config struct {
 func New() *Config {
 	return &Config{
 		LogLevel:  zerolog.InfoLevel.String(),
-		LogFormat: "auto",
+		LogFormat: FormatAuto,
 
 		ListenAddress: ":3000",
 		RealIPHeader:  true,
