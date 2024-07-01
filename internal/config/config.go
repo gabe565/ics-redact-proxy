@@ -26,15 +26,15 @@ func New() *Config {
 		ListenAddress: ":3000",
 
 		EventAllowFields: []string{
-			string(ics.ComponentPropertyDtStart),
-			string(ics.ComponentPropertyDtEnd),
-			string(ics.ComponentPropertyDtstamp),
-			string(ics.ComponentPropertyUniqueId),
 			string(ics.ComponentPropertyCreated),
+			string(ics.ComponentPropertyDtEnd),
+			string(ics.ComponentPropertyDtStart),
+			string(ics.ComponentPropertyDtstamp),
 			string(ics.ComponentPropertyLastModified),
 			string(ics.ComponentPropertySequence),
 			string(ics.ComponentPropertyStatus),
 			string(ics.ComponentPropertyTransp),
+			string(ics.ComponentPropertyUniqueId),
 		},
 		NewEventSummary: "Unavailable",
 	}
