@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"bytes"
 	"io"
 	"net/http"
 	"slices"
+	"time"
 
 	ics "github.com/arran4/golang-ical"
 	"github.com/gabe565/ics-availability-server/internal/config"
@@ -57,11 +59,14 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			cal.SetName(conf.NewCalendarName)
 		}
 
-		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")
-		if err := cal.SerializeTo(w); err != nil {
-			log.Err(err).Msg("Failed to write ics")
+		var buf bytes.Buffer
+		if err := cal.SerializeTo(&buf); err != nil {
+			log.Err(err).Msg("Failed to serialize ics")
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
+
+		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")
+		http.ServeContent(w, r, "cal.ics", time.Time{}, bytes.NewReader(buf.Bytes()))
 	}
 }
