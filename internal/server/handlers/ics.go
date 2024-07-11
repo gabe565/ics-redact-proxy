@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"bytes"
+	"crypto/sha1" //nolint:gosec
+	"encoding/hex"
 	"io"
 	"net/http"
 	"slices"
@@ -45,6 +47,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			return
 		}
 
+		var lastModified time.Time
 		for _, event := range cal.Events() {
 			event.Properties = slices.DeleteFunc(event.Properties, func(property ics.IANAProperty) bool {
 				return !slices.Contains(conf.EventAllowFields, property.IANAToken)
@@ -53,6 +56,12 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			if conf.NewEventSummary != "" {
 				event.SetSummary(conf.NewEventSummary)
 			}
+
+			if v, err := event.GetLastModifiedAt(); err == nil {
+				if v.After(lastModified) {
+					lastModified = v
+				}
+			}
 		}
 
 		if conf.NewCalendarName != "" {
@@ -60,13 +69,15 @@ func ICS(conf *config.Config) http.HandlerFunc {
 		}
 
 		var buf bytes.Buffer
-		if err := cal.SerializeTo(&buf); err != nil {
+		hasher := sha1.New() //nolint:gosec
+		if err := cal.SerializeTo(io.MultiWriter(&buf, hasher)); err != nil {
 			log.Err(err).Msg("Failed to serialize ics")
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
 		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")
-		http.ServeContent(w, r, "cal.ics", time.Time{}, bytes.NewReader(buf.Bytes()))
+		w.Header().Set("ETag", `"`+hex.EncodeToString(hasher.Sum(nil))+`"`)
+		http.ServeContent(w, r, "cal.ics", lastModified, bytes.NewReader(buf.Bytes()))
 	}
 }

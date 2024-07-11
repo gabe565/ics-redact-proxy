@@ -24,7 +24,6 @@ func ListenAndServe(ctx context.Context, conf *config.Config) error {
 	r.Use(icsmiddleware.Log)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
-	r.Use(middleware.NoCache)
 	r.Get("/robots.txt", handlers.RobotsTxt)
 
 	r.With(icsmiddleware.Token(conf.Tokens...)).
