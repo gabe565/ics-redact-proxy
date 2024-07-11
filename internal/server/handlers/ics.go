@@ -57,7 +57,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			cal.SetName(conf.NewCalendarName)
 		}
 
-		w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
+		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")
 		if err := cal.SerializeTo(w); err != nil {
 			log.Err(err).Msg("Failed to write ics")
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
