@@ -53,18 +53,20 @@ func ICS(conf *config.Config) http.HandlerFunc {
 		}
 
 		var lastModified time.Time
-		for _, event := range cal.Events() {
-			event.Properties = slices.DeleteFunc(event.Properties, func(property ics.IANAProperty) bool {
-				return !slices.Contains(conf.EventAllowFields, property.IANAToken)
-			})
+		for _, event := range cal.Components {
+			if event, ok := event.(*ics.VEvent); ok {
+				event.Properties = slices.DeleteFunc(event.Properties, func(property ics.IANAProperty) bool {
+					return !slices.Contains(conf.EventAllowFields, property.IANAToken)
+				})
 
-			if conf.NewEventSummary != "" {
-				event.SetSummary(conf.NewEventSummary)
-			}
+				if conf.NewEventSummary != "" {
+					event.SetSummary(conf.NewEventSummary)
+				}
 
-			if v, err := event.GetLastModifiedAt(); err == nil {
-				if v.After(lastModified) {
-					lastModified = v
+				if v, err := event.GetLastModifiedAt(); err == nil {
+					if v.After(lastModified) {
+						lastModified = v
+					}
 				}
 			}
 		}
