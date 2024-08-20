@@ -19,6 +19,7 @@ func New(opts ...Option) *cobra.Command {
 		RunE:  run,
 
 		DisableAutoGenTag: true,
+		SilenceUsage:      true,
 	}
 
 	conf := config.New()
