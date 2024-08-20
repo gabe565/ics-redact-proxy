@@ -17,7 +17,7 @@ import (
 
 func ICS(conf *config.Config) http.HandlerFunc {
 	start := time.Now()
-	var lastSize atomic.Uint64
+	var lastSize atomic.Int64
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := middleware.LogFromContext(r.Context())
 		if !ok {
@@ -86,7 +86,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
-		lastSize.Store(uint64(buf.Len()))
+		lastSize.Store(int64(buf.Len()))
 
 		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")
 		w.Header().Set("ETag", `"`+hex.EncodeToString(hasher.Sum(nil))+`"`)
