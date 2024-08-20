@@ -5,38 +5,47 @@ import (
 	"log/slog"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
+	"github.com/gabe565/ics-availability-server/internal/config"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-func Log(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		start := time.Now()
+func Log(conf *config.Config) func(next http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			start := time.Now()
 
-		logger := slog.With(
-			"method", r.Method,
-			"url", r.URL.String(),
-			"remoteIP", r.RemoteAddr,
-			"userAgent", r.UserAgent(),
-			"protocol", r.Proto,
-		)
+			u := r.URL.String()
+			for _, s := range conf.Tokens {
+				u = strings.ReplaceAll(u, s, "***")
+			}
 
-		resp := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
-		ctx := NewLogContext(r.Context(), logger)
-		next.ServeHTTP(resp, r.WithContext(ctx))
+			logger := slog.With(
+				"method", r.Method,
+				"url", u,
+				"remoteIP", r.RemoteAddr,
+				"userAgent", r.UserAgent(),
+				"protocol", r.Proto,
+			)
 
-		level := slog.LevelDebug
-		if resp.Status() >= 400 {
-			level = slog.LevelInfo
-		}
+			resp := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
+			ctx := NewLogContext(r.Context(), logger)
+			next.ServeHTTP(resp, r.WithContext(ctx))
 
-		logger.Log(ctx, level, "Served request",
-			"elapsed", time.Since(start).Round(time.Millisecond).String(),
-			"status", strconv.Itoa(resp.Status()),
-			"bytes", strconv.Itoa(resp.BytesWritten()),
-		)
-	})
+			level := slog.LevelDebug
+			if resp.Status() >= 400 {
+				level = slog.LevelInfo
+			}
+
+			logger.Log(ctx, level, "Served request",
+				"elapsed", time.Since(start).Round(time.Millisecond).String(),
+				"status", strconv.Itoa(resp.Status()),
+				"bytes", strconv.Itoa(resp.BytesWritten()),
+			)
+		})
+	}
 }
 
 type ctxKey uint8
