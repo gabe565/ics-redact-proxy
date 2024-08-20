@@ -16,8 +16,8 @@ func Log(next http.Handler) http.Handler {
 
 		logger := slog.With(
 			"method", r.Method,
-			"requestUrl", r.URL.String(),
-			"remoteAddr", r.RemoteAddr,
+			"url", r.URL.String(),
+			"remoteIP", r.RemoteAddr,
 			"userAgent", r.UserAgent(),
 			"protocol", r.Proto,
 		)
@@ -32,9 +32,9 @@ func Log(next http.Handler) http.Handler {
 		}
 
 		logger.Log(ctx, level, "Served request",
-			"latency", time.Since(start).String(),
+			"elapsed", time.Since(start).String(),
 			"status", strconv.Itoa(resp.Status()),
-			"responseSize", strconv.Itoa(resp.BytesWritten()),
+			"bytes", strconv.Itoa(resp.BytesWritten()),
 		)
 	})
 }
