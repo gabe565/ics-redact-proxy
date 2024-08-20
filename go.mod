@@ -3,7 +3,7 @@ module github.com/gabe565/ics-availability-server
 go 1.23.0
 
 require (
-	github.com/arran4/golang-ical v0.3.0
+	github.com/arran4/golang-ical v0.3.1
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/lmittmann/tint v1.0.5
 	github.com/mattn/go-isatty v0.0.20
