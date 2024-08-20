@@ -15,6 +15,7 @@ import (
 )
 
 func ICS(conf *config.Config) http.HandlerFunc {
+	start := time.Now()
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := middleware.LogFromContext(r.Context())
 		if !ok {
@@ -52,7 +53,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			return
 		}
 
-		var lastModified time.Time
+		lastModified := start
 		for _, event := range cal.Components {
 			if event, ok := event.(*ics.VEvent); ok {
 				event.Properties = slices.DeleteFunc(event.Properties, func(property ics.IANAProperty) bool {
