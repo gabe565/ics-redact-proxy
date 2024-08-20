@@ -12,24 +12,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var version = "beta"
-
-func New() *cobra.Command {
-	version, commit := buildVersion(version)
+func New(opts ...Option) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:         "ics-availability-server",
-		Short:       "Fetches an ics file and redacts all data except for configured fields.",
-		RunE:        run,
-		Version:     version,
-		Annotations: map[string]string{"commit": commit},
+		Use:   "ics-availability-server",
+		Short: "Fetches an ics file and redacts all data except for configured fields.",
+		RunE:  run,
 
 		DisableAutoGenTag: true,
 	}
-	cmd.InitDefaultVersionFlag()
 
 	conf := config.New()
 	conf.RegisterFlags(cmd.Flags())
 	cmd.SetContext(config.NewContext(context.Background(), conf))
+
+	for _, opt := range opts {
+		opt(cmd)
+	}
 
 	return cmd
 }
@@ -44,7 +42,10 @@ func run(cmd *cobra.Command, _ []string) error {
 		return err
 	}
 
-	log.Info().Str("version", version).Str("commit", cmd.Annotations["commit"]).Msg("ICS availability server")
+	log.Info().
+		Str("version", cmd.Annotations[VersionKey]).
+		Str("commit", cmd.Annotations[CommitKey]).
+		Msg("ICS availability server")
 
 	ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer cancel()
