@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"bytes"
 	"crypto/sha1" //nolint:gosec
 	"encoding/hex"
 	"io"
 	"net/http"
 	"slices"
+	"strings"
 	"sync/atomic"
 	"time"
 
@@ -78,7 +78,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			cal.SetName(conf.NewCalendarName)
 		}
 
-		var buf bytes.Buffer
+		var buf strings.Builder
 		buf.Grow(int(lastSize.Load()))
 		hasher := sha1.New() //nolint:gosec
 		if err := cal.SerializeTo(io.MultiWriter(&buf, hasher)); err != nil {
@@ -90,6 +90,6 @@ func ICS(conf *config.Config) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")
 		w.Header().Set("ETag", `"`+hex.EncodeToString(hasher.Sum(nil))+`"`)
-		http.ServeContent(w, r, "cal.ics", lastModified, bytes.NewReader(buf.Bytes()))
+		http.ServeContent(w, r, "cal.ics", lastModified, strings.NewReader(buf.String()))
 	}
 }
