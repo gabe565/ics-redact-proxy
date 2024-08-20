@@ -48,7 +48,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 		cal, err := ics.ParseCalendar(resp.Body)
 		if err != nil {
 			logger.Error("Failed to parse ics", "error", err)
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			http.Error(w, http.StatusText(http.StatusServiceUnavailable), http.StatusServiceUnavailable)
 			return
 		}
 
