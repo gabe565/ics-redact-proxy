@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"slices"
+	"sync/atomic"
 	"time"
 
 	ics "github.com/arran4/golang-ical"
@@ -16,6 +17,7 @@ import (
 
 func ICS(conf *config.Config) http.HandlerFunc {
 	start := time.Now()
+	var lastSize atomic.Uint64
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := middleware.LogFromContext(r.Context())
 		if !ok {
@@ -77,12 +79,14 @@ func ICS(conf *config.Config) http.HandlerFunc {
 		}
 
 		var buf bytes.Buffer
+		buf.Grow(int(lastSize.Load()))
 		hasher := sha1.New() //nolint:gosec
 		if err := cal.SerializeTo(io.MultiWriter(&buf, hasher)); err != nil {
 			logger.Error("Failed to serialize ics", "error", err)
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
+		lastSize.Store(uint64(buf.Len()))
 
 		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")
 		w.Header().Set("ETag", `"`+hex.EncodeToString(hasher.Sum(nil))+`"`)
