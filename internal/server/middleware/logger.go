@@ -32,7 +32,7 @@ func Log(next http.Handler) http.Handler {
 		}
 
 		logger.Log(ctx, level, "Served request",
-			"elapsed", time.Since(start).String(),
+			"elapsed", time.Since(start).Round(time.Millisecond).String(),
 			"status", strconv.Itoa(resp.Status()),
 			"bytes", strconv.Itoa(resp.BytesWritten()),
 		)
