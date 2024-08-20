@@ -11,21 +11,26 @@ import (
 
 	ics "github.com/arran4/golang-ical"
 	"github.com/gabe565/ics-availability-server/internal/config"
-	"github.com/rs/zerolog/log"
+	"github.com/gabe565/ics-availability-server/internal/server/middleware"
 )
 
 func ICS(conf *config.Config) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		logger, ok := middleware.LogFromContext(r.Context())
+		if !ok {
+			panic("request context missing logger")
+		}
+
 		req, err := http.NewRequestWithContext(r.Context(), http.MethodGet, conf.SourceURL, nil)
 		if err != nil {
-			log.Err(err).Msg("Failed create ics request")
+			logger.Error("Failed create ics request", "error", err)
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
-			log.Err(err).Msg("Failed to get ics")
+			logger.Error("Failed to get ics", "error", err)
 			http.Error(w, http.StatusText(http.StatusServiceUnavailable), http.StatusServiceUnavailable)
 			return
 		}
@@ -35,14 +40,14 @@ func ICS(conf *config.Config) http.HandlerFunc {
 		}()
 
 		if resp.StatusCode >= 400 {
-			log.Err(err).Str("status", resp.Status).Msg("Upstream returned error")
+			logger.Error("Upstream returned error", "status", resp.Status)
 			http.Error(w, http.StatusText(resp.StatusCode), resp.StatusCode)
 			return
 		}
 
 		cal, err := ics.ParseCalendar(resp.Body)
 		if err != nil {
-			log.Err(err).Msg("Failed to parse ics")
+			logger.Error("Failed to parse ics", "error", err)
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
@@ -71,7 +76,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 		var buf bytes.Buffer
 		hasher := sha1.New() //nolint:gosec
 		if err := cal.SerializeTo(io.MultiWriter(&buf, hasher)); err != nil {
-			log.Err(err).Msg("Failed to serialize ics")
+			logger.Error("Failed to serialize ics", "error", err)
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}

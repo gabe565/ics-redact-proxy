@@ -1,8 +1,10 @@
 package config
 
 import (
+	"log/slog"
+	"strings"
+
 	ics "github.com/arran4/golang-ical"
-	"github.com/rs/zerolog"
 )
 
 type Config struct {
@@ -21,8 +23,8 @@ type Config struct {
 
 func New() *Config {
 	return &Config{
-		LogLevel:  zerolog.LevelInfoValue,
-		LogFormat: FormatAuto,
+		LogLevel:  strings.ToLower(slog.LevelInfo.String()),
+		LogFormat: FormatAuto.String(),
 
 		ListenAddress: ":3000",
 		RealIPHeader:  true,

@@ -2,13 +2,13 @@ package cmd
 
 import (
 	"context"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/gabe565/ics-availability-server/internal/config"
 	"github.com/gabe565/ics-availability-server/internal/server"
-	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -42,10 +42,10 @@ func run(cmd *cobra.Command, _ []string) error {
 		return err
 	}
 
-	log.Info().
-		Str("version", cmd.Annotations[VersionKey]).
-		Str("commit", cmd.Annotations[CommitKey]).
-		Msg("ICS availability server")
+	slog.Info("ICS availability server",
+		"version", cmd.Annotations[VersionKey],
+		"commit", cmd.Annotations[CommitKey],
+	)
 
 	ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer cancel()

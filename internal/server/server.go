@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -11,7 +12,6 @@ import (
 	icsmiddleware "github.com/gabe565/ics-availability-server/internal/server/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/rs/zerolog/log"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -39,13 +39,13 @@ func ListenAndServe(ctx context.Context, conf *config.Config) error {
 	group, ctx := errgroup.WithContext(ctx)
 
 	group.Go(func() error {
-		log.Info().Str("address", conf.ListenAddress).Msg("Starting server")
+		slog.Info("Starting server", "address", server.Addr)
 		return server.ListenAndServe()
 	})
 
 	group.Go(func() error {
 		<-ctx.Done()
-		log.Info().Str("address", conf.ListenAddress).Msg("Gracefully shutting down server")
+		slog.Info("Gracefully shutting down server")
 		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 60*time.Second)
 		defer shutdownCancel()
 

@@ -24,7 +24,7 @@ func (c *Config) Load(cmd *cobra.Command) error {
 			}
 		}
 	})
-	initLog(cmd)
+	c.InitLog(cmd.ErrOrStderr())
 	if err := errors.Join(errs...); err != nil {
 		return err
 	}

@@ -2,71 +2,71 @@ package config
 
 import (
 	"io"
+	"log/slog"
 	"os"
+	"strings"
 	"time"
 
+	"github.com/lmittmann/tint"
 	"github.com/mattn/go-isatty"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
-	"github.com/spf13/cobra"
 )
 
-func logLevel(level string) zerolog.Level {
-	parsedLevel, err := zerolog.ParseLevel(level)
-	if err != nil || parsedLevel == zerolog.NoLevel {
-		if level == "warning" {
-			parsedLevel = zerolog.WarnLevel
-		} else {
-			log.Warn().Str("value", level).Msg("Invalid log level. Defaulting to info.")
-			parsedLevel = zerolog.InfoLevel
-		}
-	}
-	return parsedLevel
-}
+//go:generate enumer -type LogFormat -trimprefix Format -transform lower -text
+
+type LogFormat uint8
 
 const (
-	FormatJSON  = "json"
-	FormatAuto  = "auto"
-	FormatColor = "color"
-	FormatPlain = "plain"
+	FormatAuto LogFormat = iota
+	FormatColor
+	FormatPlain
+	FormatJSON
 )
 
-func logFormat(out io.Writer, format string) io.Writer {
-	switch format {
-	case FormatJSON:
-		return out
-	default:
-		var useColor bool
-		switch format {
-		case FormatAuto:
-			if w, ok := out.(*os.File); ok {
-				useColor = isatty.IsTerminal(w.Fd())
-			}
-		case FormatColor:
-			useColor = true
-		case FormatPlain:
-		default:
-			log.Warn().Str("value", format).Msg("Invalid log formatter. Defaulting to auto.")
-		}
-
-		return zerolog.ConsoleWriter{
-			Out:        out,
-			NoColor:    !useColor,
-			TimeFormat: time.DateTime,
-		}
+func (c *Config) InitLog(w io.Writer) {
+	var level slog.Level
+	if err := level.UnmarshalText([]byte(c.LogLevel)); err != nil {
+		defer func() {
+			slog.Warn("Invalid log level. Defaulting to info.", "value", c.LogLevel)
+		}()
+		level = slog.LevelInfo
+		c.LogLevel = strings.ToLower(level.String())
 	}
+
+	var format LogFormat
+	if err := format.UnmarshalText([]byte(c.LogFormat)); err != nil {
+		defer func() {
+			slog.Warn("Invalid log format. Defaulting to auto.", "value", c.LogFormat)
+		}()
+		format = FormatAuto
+		c.LogFormat = format.String()
+	}
+
+	InitLog(w, level, format)
 }
 
-func initLog(cmd *cobra.Command) {
-	level, err := cmd.Flags().GetString("log-level")
-	if err != nil {
-		panic(err)
-	}
-	zerolog.SetGlobalLevel(logLevel(level))
+func InitLog(w io.Writer, level slog.Level, format LogFormat) {
+	switch format {
+	case FormatJSON:
+		slog.SetDefault(slog.New(slog.NewJSONHandler(w, &slog.HandlerOptions{
+			Level: level,
+		})))
+	default:
+		var color bool
+		switch format {
+		case FormatAuto:
+			if f, ok := w.(*os.File); ok {
+				color = isatty.IsTerminal(f.Fd()) || isatty.IsCygwinTerminal(f.Fd())
+			}
+		case FormatColor:
+			color = true
+		}
 
-	format, err := cmd.Flags().GetString("log-format")
-	if err != nil {
-		panic(err)
+		slog.SetDefault(slog.New(
+			tint.NewHandler(w, &tint.Options{
+				Level:      level,
+				TimeFormat: time.DateTime,
+				NoColor:    !color,
+			}),
+		))
 	}
-	log.Logger = log.Output(logFormat(cmd.ErrOrStderr(), format))
 }

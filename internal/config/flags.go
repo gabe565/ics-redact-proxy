@@ -1,6 +1,8 @@
 package config
 
 import (
+	"strings"
+
 	"github.com/spf13/pflag"
 )
 
@@ -19,8 +21,8 @@ const (
 )
 
 func (c *Config) RegisterFlags(f *pflag.FlagSet) {
-	f.StringVarP(&c.LogLevel, FlagLogLevel, "l", c.LogLevel, "Log level (trace, debug, info, warn, error, fatal, panic)")
-	f.StringVar(&c.LogFormat, FlagLogFormat, c.LogFormat, "Log format (auto, color, plain, json)")
+	f.StringVarP(&c.LogLevel, FlagLogLevel, "l", c.LogLevel, "Log level (one of debug, info, warn, error)")
+	f.StringVar(&c.LogFormat, FlagLogFormat, c.LogFormat, "Log format (one of "+strings.Join(LogFormatStrings(), ", ")+")")
 
 	f.StringVar(&c.ListenAddress, "addr", c.ListenAddress, "Listen address")
 	if err := f.MarkDeprecated("addr", "use --"+ListenAddressFlag+" instead"); err != nil {
