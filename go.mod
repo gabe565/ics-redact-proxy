@@ -1,6 +1,6 @@
 module gabe565.com/ics-redact-proxy
 
-go 1.23.0
+go 1.23.2
 
 require (
 	github.com/arran4/golang-ical v0.3.1
