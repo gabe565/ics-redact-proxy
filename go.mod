@@ -6,7 +6,7 @@ require (
 	github.com/arran4/golang-ical v0.3.1
 	github.com/dmarkham/enumer v1.5.10
 	github.com/go-chi/chi/v5 v5.1.0
-	github.com/jedib0t/go-pretty/v6 v6.5.9
+	github.com/jedib0t/go-pretty/v6 v6.6.1
 	github.com/lmittmann/tint v1.0.5
 	github.com/mattn/go-isatty v0.0.20
 	github.com/spf13/cobra v1.8.1
