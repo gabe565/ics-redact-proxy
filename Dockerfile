@@ -25,5 +25,5 @@ EOT
 
 FROM gcr.io/distroless/static:nonroot
 WORKDIR /
-COPY --from=build /app/ics-availability-server /
-ENTRYPOINT ["/ics-availability-server"]
+COPY --from=build /app/ics-redact-proxy /
+ENTRYPOINT ["/ics-redact-proxy"]

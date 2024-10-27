@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gabe565/ics-availability-server/internal/config"
+	"gabe565.com/ics-redact-proxy/internal/config"
 	"github.com/go-chi/chi/v5/middleware"
 )
 

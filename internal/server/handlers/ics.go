@@ -10,9 +10,9 @@ import (
 	"sync/atomic"
 	"time"
 
+	"gabe565.com/ics-redact-proxy/internal/config"
+	"gabe565.com/ics-redact-proxy/internal/server/middleware"
 	ics "github.com/arran4/golang-ical"
-	"github.com/gabe565/ics-availability-server/internal/config"
-	"github.com/gabe565/ics-availability-server/internal/server/middleware"
 )
 
 func ICS(conf *config.Config) http.HandlerFunc {

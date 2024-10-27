@@ -1,4 +1,4 @@
 FROM gcr.io/distroless/static:nonroot
 WORKDIR /
-COPY ics-availability-server /
-ENTRYPOINT ["/ics-availability-server"]
+COPY ics-redact-proxy /
+ENTRYPOINT ["/ics-redact-proxy"]

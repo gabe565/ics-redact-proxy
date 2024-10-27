@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gabe565/ics-availability-server/internal/config"
-	"github.com/gabe565/ics-availability-server/internal/server/handlers"
-	icsmiddleware "github.com/gabe565/ics-availability-server/internal/server/middleware"
+	"gabe565.com/ics-redact-proxy/internal/config"
+	"gabe565.com/ics-redact-proxy/internal/server/handlers"
+	icsmiddleware "gabe565.com/ics-redact-proxy/internal/server/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"golang.org/x/sync/errgroup"

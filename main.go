@@ -4,8 +4,8 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/gabe565/ics-availability-server/cmd"
-	"github.com/gabe565/ics-availability-server/internal/config"
+	"gabe565.com/ics-redact-proxy/cmd"
+	"gabe565.com/ics-redact-proxy/internal/config"
 )
 
 var version = "beta"

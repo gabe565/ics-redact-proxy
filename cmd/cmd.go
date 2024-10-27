@@ -7,14 +7,14 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/gabe565/ics-availability-server/internal/config"
-	"github.com/gabe565/ics-availability-server/internal/server"
+	"gabe565.com/ics-redact-proxy/internal/config"
+	"gabe565.com/ics-redact-proxy/internal/server"
 	"github.com/spf13/cobra"
 )
 
 func New(opts ...Option) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "ics-availability-server",
+		Use:   "ics-redact-proxy",
 		Short: "Fetches an ics file and redacts all data except for configured fields.",
 		RunE:  run,
 
@@ -44,7 +44,7 @@ func run(cmd *cobra.Command, _ []string) error {
 		return err
 	}
 
-	slog.Info("ICS availability server",
+	slog.Info("ICS redact proxy",
 		"version", cmd.Annotations[VersionKey],
 		"commit", cmd.Annotations[CommitKey],
 	)

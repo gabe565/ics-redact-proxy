@@ -1,4 +1,4 @@
-module github.com/gabe565/ics-availability-server
+module gabe565.com/ics-redact-proxy
 
 go 1.23.0
 

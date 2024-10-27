@@ -10,8 +10,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/gabe565/ics-availability-server/cmd"
-	"github.com/gabe565/ics-availability-server/internal/config"
+	"gabe565.com/ics-redact-proxy/cmd"
+	"gabe565.com/ics-redact-proxy/internal/config"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
