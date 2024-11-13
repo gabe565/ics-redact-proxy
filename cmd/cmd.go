@@ -9,10 +9,11 @@ import (
 
 	"gabe565.com/ics-redact-proxy/internal/config"
 	"gabe565.com/ics-redact-proxy/internal/server"
+	"gabe565.com/utils/cobrax"
 	"github.com/spf13/cobra"
 )
 
-func New(opts ...Option) *cobra.Command {
+func New(opts ...cobrax.Option) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "ics-redact-proxy",
 		Short: "Fetches an ics file and redacts all data except for configured fields.",
@@ -44,10 +45,7 @@ func run(cmd *cobra.Command, _ []string) error {
 		return err
 	}
 
-	slog.Info("ICS redact proxy",
-		"version", cmd.Annotations[VersionKey],
-		"commit", cmd.Annotations[CommitKey],
-	)
+	slog.Info("ICS redact proxy", "version", cobrax.GetVersion(cmd), "commit", cobrax.GetCommit(cmd))
 
 	ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer cancel()
