@@ -54,7 +54,7 @@ func generateEnvDoc(cmd *cobra.Command, output string) error {
 	excludeNames := []string{"help", "version"}
 	var rows []table.Row
 	cmd.Flags().VisitAll(func(flag *pflag.Flag) {
-		if slices.Contains(excludeNames, flag.Name) {
+		if slices.Contains(excludeNames, flag.Name) || flag.Deprecated != "" {
 			return
 		}
 

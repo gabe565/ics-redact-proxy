@@ -2,7 +2,6 @@
 
 | Name | Usage | Default |
 | --- | --- | --- |
-| `IAS_ADDR` | Listen address | `:3000` |
 | `IAS_EVENT_ALLOW_FIELDS` | Allowed event fields | `CREATED,DTEND,DTSTART,DTSTAMP,EXDATE,EXRULE,LAST-MODIFIED,RDATE,RRULE,SEQUENCE,STATUS,TRANSP,UID` |
 | `IAS_LISTEN_ADDRESS` | Listen address | `:3000` |
 | `IAS_LOG_FORMAT` | Log format (one of auto, color, plain, json) | `auto` |
