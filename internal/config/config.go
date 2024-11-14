@@ -11,6 +11,7 @@ type Config struct {
 	LogLevel  string
 	LogFormat string
 
+	NoVerify      bool
 	ListenAddress string
 	Tokens        []string
 	RealIPHeader  bool

@@ -16,6 +16,7 @@ ics-redact-proxy [flags]
   -l, --log-level string             Log level (one of debug, info, warn, error) (default "info")
       --new-calendar-name string     If set, calendar name will be changed to this value
       --new-event-summary string     If set, event summaries will be changed to this value (default "Unavailable")
+      --no-verify                    Skips source verification request on startup
       --real-ip-header               Get client IP address from the "Real-IP" header (default true)
       --source-url string            Source iCal URL
       --token token                  Enables token auth (requests will require a token GET parameter)
