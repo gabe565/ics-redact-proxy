@@ -3,7 +3,7 @@ module gabe565.com/ics-redact-proxy
 go 1.23.3
 
 require (
-	gabe565.com/utils v0.0.0-20241114041836-facb2857c9b1
+	gabe565.com/utils v0.0.0-20241114234101-e128cd3269b5
 	github.com/arran4/golang-ical v0.3.1
 	github.com/dmarkham/enumer v1.5.10
 	github.com/dustin/go-humanize v1.0.1
