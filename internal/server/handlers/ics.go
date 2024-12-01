@@ -66,6 +66,13 @@ func ICS(conf *config.Config) http.HandlerFunc {
 					event.SetSummary(conf.NewEventSummary)
 				}
 
+				if conf.HashUID {
+					if uid := event.GetProperty(ics.ComponentPropertyUniqueId); uid != nil {
+						checksum := sha1.Sum([]byte(uid.Value)) //nolint:gosec
+						uid.Value = hex.EncodeToString(checksum[:])
+					}
+				}
+
 				if v, err := event.GetLastModifiedAt(); err == nil {
 					if lastModified.Before(v) {
 						lastModified = v

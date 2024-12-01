@@ -20,6 +20,7 @@ type Config struct {
 	EventAllowFields []string
 	NewCalendarName  string
 	NewEventSummary  string
+	HashUID          bool
 }
 
 func New() *Config {
@@ -46,5 +47,6 @@ func New() *Config {
 			string(ics.ComponentPropertyUniqueId),
 		},
 		NewEventSummary: "Unavailable",
+		HashUID:         true,
 	}
 }

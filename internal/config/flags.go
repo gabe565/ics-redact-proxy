@@ -19,6 +19,7 @@ const (
 	EventAllowFieldsFlag = "event-allow-fields"
 	NewCalendarNameFlag  = "new-calendar-name"
 	NewEventSummaryFlag  = "new-event-summary"
+	HashUIDFlag          = "hash-uid"
 )
 
 func (c *Config) RegisterFlags(f *pflag.FlagSet) {
@@ -36,4 +37,5 @@ func (c *Config) RegisterFlags(f *pflag.FlagSet) {
 	f.StringSliceVar(&c.EventAllowFields, EventAllowFieldsFlag, c.EventAllowFields, "Allowed event fields")
 	f.StringVar(&c.NewCalendarName, NewCalendarNameFlag, c.NewCalendarName, "If set, calendar name will be changed to this value")
 	f.StringVar(&c.NewEventSummary, NewEventSummaryFlag, c.NewEventSummary, "If set, event summaries will be changed to this value")
+	f.BoolVar(&c.HashUID, HashUIDFlag, c.HashUID, "Replace event UID with a hash. The UID can leak domains and IP addresses so this option is recommended.")
 }

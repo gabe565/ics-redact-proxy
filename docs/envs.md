@@ -3,6 +3,7 @@
 | Name | Usage | Default |
 | --- | --- | --- |
 | `IAS_EVENT_ALLOW_FIELDS` | Allowed event fields | `CREATED,DTEND,DTSTART,DTSTAMP,EXDATE,EXRULE,LAST-MODIFIED,RDATE,RRULE,SEQUENCE,STATUS,TRANSP,UID` |
+| `IAS_HASH_UID` | Replace event UID with a hash. The UID can leak domains and IP addresses so this option is recommended. | `true` |
 | `IAS_LISTEN_ADDRESS` | Listen address | `:3000` |
 | `IAS_LOG_FORMAT` | Log format (one of auto, color, plain, json) | `auto` |
 | `IAS_LOG_LEVEL` | Log level (one of debug, info, warn, error) | `info` |
