@@ -90,6 +90,6 @@ func ICS(conf *config.Config) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")
 		w.Header().Set("ETag", `"`+hex.EncodeToString(hasher.Sum(nil))+`"`)
-		http.ServeContent(w, r, "cal.ics", lastModified, strings.NewReader(buf.String()))
+		http.ServeContent(w, r, "", lastModified, strings.NewReader(buf.String()))
 	}
 }
