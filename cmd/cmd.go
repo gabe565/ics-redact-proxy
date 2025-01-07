@@ -14,7 +14,7 @@ import (
 	"gabe565.com/ics-redact-proxy/internal/config"
 	"gabe565.com/ics-redact-proxy/internal/server"
 	"gabe565.com/utils/cobrax"
-	"github.com/dustin/go-humanize"
+	"github.com/labstack/gommon/bytes"
 	"github.com/spf13/cobra"
 )
 
@@ -89,7 +89,6 @@ func verifySource(ctx context.Context, conf *config.Config) error {
 		return fmt.Errorf("%w: %w", ErrSourceVerify, err)
 	}
 
-	//nolint:gosec
-	slog.Info("Upstream verification succeeded", "status", resp.Status, "size", humanize.IBytes(uint64(n)))
+	slog.Info("Upstream verification succeeded", "status", resp.Status, "size", bytes.Format(n))
 	return nil
 }

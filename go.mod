@@ -6,9 +6,9 @@ require (
 	gabe565.com/utils v0.0.0-20241114041836-facb2857c9b1
 	github.com/arran4/golang-ical v0.3.1
 	github.com/dmarkham/enumer v1.5.10
-	github.com/dustin/go-humanize v1.0.1
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/jedib0t/go-pretty/v6 v6.6.1
+	github.com/labstack/gommon v0.4.2
 	github.com/lmittmann/tint v1.0.5
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
