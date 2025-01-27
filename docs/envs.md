@@ -10,6 +10,8 @@
 | `IAS_NEW_CALENDAR_NAME` | If set, calendar name will be changed to this value | ` ` |
 | `IAS_NEW_EVENT_SUMMARY` | If set, event summaries will be changed to this value | `Unavailable` |
 | `IAS_NO_VERIFY` | Skips source verification request on startup | `false` |
+| `IAS_RATE_LIMIT_INTERVAL` | Rate limiter sliding window interval | `10s` |
+| `IAS_RATE_LIMIT_MAX_REQUESTS` | Rate limiter max requests per IP | `5` |
 | `IAS_REAL_IP_HEADER` | Get client IP address from the "Real-IP" header | `true` |
 | `IAS_SOURCE_URL` | Source iCal URL | ` ` |
 | `IAS_TOKEN` | Enables token auth (requests will require a `token` GET parameter) | ` ` |

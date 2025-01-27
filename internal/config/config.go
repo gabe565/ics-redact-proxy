@@ -3,6 +3,7 @@ package config
 import (
 	"log/slog"
 	"strings"
+	"time"
 
 	ics "github.com/arran4/golang-ical"
 )
@@ -11,10 +12,12 @@ type Config struct {
 	LogLevel  string
 	LogFormat string
 
-	NoVerify      bool
-	ListenAddress string
-	Tokens        []string
-	RealIPHeader  bool
+	NoVerify             bool
+	ListenAddress        string
+	Tokens               []string
+	RealIPHeader         bool
+	RateLimitMaxRequests int
+	RateLimitInterval    time.Duration
 
 	SourceURL        string
 	EventAllowFields []string
@@ -28,8 +31,10 @@ func New() *Config {
 		LogLevel:  strings.ToLower(slog.LevelInfo.String()),
 		LogFormat: FormatAuto.String(),
 
-		ListenAddress: ":3000",
-		RealIPHeader:  true,
+		ListenAddress:        ":3000",
+		RealIPHeader:         true,
+		RateLimitMaxRequests: 5,
+		RateLimitInterval:    10 * time.Second,
 
 		EventAllowFields: []string{
 			string(ics.ComponentPropertyCreated),

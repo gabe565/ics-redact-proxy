@@ -30,7 +30,7 @@ func ListenAndServe(ctx context.Context, conf *config.Config) error {
 	r.Get("/robots.txt", handlers.RobotsTxt)
 
 	r.Group(func(r chi.Router) {
-		r.Use(httprate.LimitByIP(5, 10*time.Second))
+		r.Use(httprate.LimitByIP(conf.RateLimitMaxRequests, conf.RateLimitInterval))
 		r.Use(icsmiddleware.Token(conf.Tokens...))
 		r.Get("/*", handlers.ICS(conf))
 	})

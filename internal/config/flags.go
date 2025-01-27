@@ -11,9 +11,11 @@ const (
 	FlagLogLevel  = "log-level"
 	FlagLogFormat = "log-format"
 
-	FlagListenAddress = "listen-address"
-	FlagToken         = "token"
-	FlagRealIPHeader  = "real-ip-header"
+	FlagListenAddress        = "listen-address"
+	FlagToken                = "token"
+	FlagRealIPHeader         = "real-ip-header"
+	FlagRateLimitMaxRequests = "rate-limit-max-requests"
+	FlagRateLimitInterval    = "rate-limit-interval"
 
 	FlagSourceURL        = "source-url"
 	FlagEventAllowFields = "event-allow-fields"
@@ -32,6 +34,8 @@ func (c *Config) RegisterFlags(f *pflag.FlagSet) {
 	f.StringVar(&c.ListenAddress, FlagListenAddress, c.ListenAddress, "Listen address")
 	f.StringSliceVar(&c.Tokens, FlagToken, c.Tokens, "Enables token auth (requests will require a `token` GET parameter)")
 	f.BoolVar(&c.RealIPHeader, FlagRealIPHeader, c.RealIPHeader, `Get client IP address from the "Real-IP" header`)
+	f.IntVar(&c.RateLimitMaxRequests, FlagRateLimitMaxRequests, c.RateLimitMaxRequests, "Rate limiter max requests per IP")
+	f.DurationVar(&c.RateLimitInterval, FlagRateLimitInterval, c.RateLimitInterval, "Rate limiter sliding window interval")
 
 	f.StringVar(&c.SourceURL, FlagSourceURL, c.SourceURL, "Source iCal URL")
 	f.StringSliceVar(&c.EventAllowFields, FlagEventAllowFields, c.EventAllowFields, "Allowed event fields")
