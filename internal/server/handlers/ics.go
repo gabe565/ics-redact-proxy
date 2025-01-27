@@ -88,6 +88,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 		lastSize.Store(int64(buf.Len()))
 
 		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 		http.ServeContent(w, r, "", time.Time{}, strings.NewReader(buf.String()))
 	}
 }
