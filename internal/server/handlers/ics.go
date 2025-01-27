@@ -43,7 +43,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			_ = resp.Body.Close()
 		}()
 
-		if resp.StatusCode >= 400 {
+		if resp.StatusCode != http.StatusOK {
 			logger.Error("Upstream returned error", "status", resp.Status)
 			http.Error(w, http.StatusText(resp.StatusCode), resp.StatusCode)
 			return
