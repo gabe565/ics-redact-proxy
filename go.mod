@@ -6,7 +6,7 @@ require (
 	gabe565.com/utils v0.0.0-20241213205714-152b8de1d3fe
 	github.com/arran4/golang-ical v0.3.1
 	github.com/dmarkham/enumer v1.5.10
-	github.com/go-chi/chi/v5 v5.1.0
+	github.com/go-chi/chi/v5 v5.2.0
 	github.com/jedib0t/go-pretty/v6 v6.6.5
 	github.com/labstack/gommon v0.4.2
 	github.com/lmittmann/tint v1.0.6
