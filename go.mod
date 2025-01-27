@@ -9,7 +9,7 @@ require (
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/jedib0t/go-pretty/v6 v6.6.5
 	github.com/labstack/gommon v0.4.2
-	github.com/lmittmann/tint v1.0.5
+	github.com/lmittmann/tint v1.0.6
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
 	golang.org/x/sync v0.10.0
