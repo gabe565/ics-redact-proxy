@@ -16,7 +16,6 @@ import (
 )
 
 func ICS(conf *config.Config) http.HandlerFunc {
-	start := time.Now()
 	var lastSize atomic.Int64
 	lastSize.Store(32 * 1024)
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -56,7 +55,6 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			return
 		}
 
-		lastModified := start
 		for _, event := range cal.Components {
 			if event, ok := event.(*ics.VEvent); ok {
 				event.Properties = slices.DeleteFunc(event.Properties, func(property ics.IANAProperty) bool {
@@ -73,12 +71,6 @@ func ICS(conf *config.Config) http.HandlerFunc {
 						uid.Value = hex.EncodeToString(checksum[:])
 					}
 				}
-
-				if v, err := event.GetLastModifiedAt(); err == nil {
-					if v.After(lastModified) {
-						lastModified = v
-					}
-				}
 			}
 		}
 
@@ -88,8 +80,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 
 		var buf strings.Builder
 		buf.Grow(int(lastSize.Load()))
-		hasher := sha1.New() //nolint:gosec
-		if err := cal.SerializeTo(io.MultiWriter(&buf, hasher)); err != nil {
+		if err := cal.SerializeTo(&buf); err != nil {
 			logger.Error("Failed to serialize ics", "error", err)
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
@@ -97,7 +88,6 @@ func ICS(conf *config.Config) http.HandlerFunc {
 		lastSize.Store(int64(buf.Len()))
 
 		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")
-		w.Header().Set("ETag", `"`+hex.EncodeToString(hasher.Sum(nil))+`"`)
-		http.ServeContent(w, r, "", lastModified, strings.NewReader(buf.String()))
+		http.ServeContent(w, r, "", time.Time{}, strings.NewReader(buf.String()))
 	}
 }
