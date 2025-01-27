@@ -11,6 +11,7 @@ const (
 	FlagLogLevel  = "log-level"
 	FlagLogFormat = "log-format"
 
+	FlagNoVerify             = "no-verify"
 	FlagListenAddress        = "listen-address"
 	FlagToken                = "token"
 	FlagRealIPHeader         = "real-ip-header"
@@ -28,7 +29,7 @@ func (c *Config) RegisterFlags(f *pflag.FlagSet) {
 	f.StringVarP(&c.LogLevel, FlagLogLevel, "l", c.LogLevel, "Log level (one of debug, info, warn, error)")
 	f.StringVar(&c.LogFormat, FlagLogFormat, c.LogFormat, "Log format (one of "+strings.Join(LogFormatStrings(), ", ")+")")
 
-	f.BoolVar(&c.NoVerify, "no-verify", c.NoVerify, "Skips source verification request on startup")
+	f.BoolVar(&c.NoVerify, FlagNoVerify, c.NoVerify, "Skips source verification request on startup")
 	f.StringVar(&c.ListenAddress, "addr", c.ListenAddress, "Listen address")
 	must.Must(f.MarkDeprecated("addr", "use --"+FlagListenAddress+" instead"))
 	f.StringVar(&c.ListenAddress, FlagListenAddress, c.ListenAddress, "Listen address")
