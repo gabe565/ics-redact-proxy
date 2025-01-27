@@ -3,7 +3,6 @@ package config
 import (
 	"strings"
 
-	"gabe565.com/utils/must"
 	"github.com/spf13/pflag"
 )
 
@@ -30,8 +29,6 @@ func (c *Config) RegisterFlags(f *pflag.FlagSet) {
 	f.StringVar(&c.LogFormat, FlagLogFormat, c.LogFormat, "Log format (one of "+strings.Join(LogFormatStrings(), ", ")+")")
 
 	f.BoolVar(&c.NoVerify, FlagNoVerify, c.NoVerify, "Skips source verification request on startup")
-	f.StringVar(&c.ListenAddress, "addr", c.ListenAddress, "Listen address")
-	must.Must(f.MarkDeprecated("addr", "use --"+FlagListenAddress+" instead"))
 	f.StringVar(&c.ListenAddress, FlagListenAddress, c.ListenAddress, "Listen address")
 	f.StringSliceVar(&c.Tokens, FlagToken, c.Tokens, "Enables token auth (requests will require a `token` GET parameter)")
 	f.BoolVar(&c.RealIPHeader, FlagRealIPHeader, c.RealIPHeader, `Get client IP address from the "Real-IP" header`)
