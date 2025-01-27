@@ -55,7 +55,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			return
 		}
 
-		var lastModified time.Time
+		lastModified := start
 		for _, event := range cal.Components {
 			if event, ok := event.(*ics.VEvent); ok {
 				event.Properties = slices.DeleteFunc(event.Properties, func(property ics.IANAProperty) bool {
@@ -74,14 +74,11 @@ func ICS(conf *config.Config) http.HandlerFunc {
 				}
 
 				if v, err := event.GetLastModifiedAt(); err == nil {
-					if lastModified.Before(v) {
+					if v.After(lastModified) {
 						lastModified = v
 					}
 				}
 			}
-		}
-		if !lastModified.IsZero() && lastModified.Before(start) {
-			lastModified = start
 		}
 
 		if conf.NewCalendarName != "" {
