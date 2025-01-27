@@ -18,6 +18,7 @@ import (
 func ICS(conf *config.Config) http.HandlerFunc {
 	start := time.Now()
 	var lastSize atomic.Int64
+	lastSize.Store(32 * 1024)
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := middleware.LogFromContext(r.Context())
 		if !ok {
