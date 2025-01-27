@@ -12,6 +12,7 @@ import (
 	icsmiddleware "gabe565.com/ics-redact-proxy/internal/server/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/httprate"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -28,8 +29,11 @@ func ListenAndServe(ctx context.Context, conf *config.Config) error {
 
 	r.Get("/robots.txt", handlers.RobotsTxt)
 
-	r.With(icsmiddleware.Token(conf.Tokens...)).
-		Get("/*", handlers.ICS(conf))
+	r.Group(func(r chi.Router) {
+		r.Use(httprate.LimitByIP(5, 10*time.Second))
+		r.Use(icsmiddleware.Token(conf.Tokens...))
+		r.Get("/*", handlers.ICS(conf))
+	})
 
 	server := &http.Server{
 		Addr:           conf.ListenAddress,
