@@ -4,7 +4,7 @@ go 1.23.5
 
 require (
 	gabe565.com/utils v0.0.0-20241213205714-152b8de1d3fe
-	github.com/arran4/golang-ical v0.3.1
+	github.com/arran4/golang-ical v0.3.2
 	github.com/dmarkham/enumer v1.5.10
 	github.com/go-chi/chi/v5 v5.2.0
 	github.com/go-chi/httprate v0.14.1
