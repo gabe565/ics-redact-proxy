@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"gabe565.com/ics-redact-proxy/internal/config"
+	"gabe565.com/utils/bytefmt"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
@@ -42,7 +43,7 @@ func Log(conf *config.Config) func(next http.Handler) http.Handler {
 			logger.Log(ctx, level, "Served request",
 				"elapsed", time.Since(start).Round(time.Millisecond).String(),
 				"status", strconv.Itoa(resp.Status()),
-				"bytes", strconv.Itoa(resp.BytesWritten()),
+				"bytes", bytefmt.Encode(int64(resp.BytesWritten())),
 			)
 		})
 	}
