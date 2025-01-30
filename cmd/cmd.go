@@ -13,8 +13,8 @@ import (
 
 	"gabe565.com/ics-redact-proxy/internal/config"
 	"gabe565.com/ics-redact-proxy/internal/server"
+	"gabe565.com/utils/bytefmt"
 	"gabe565.com/utils/cobrax"
-	"github.com/labstack/gommon/bytes"
 	"github.com/spf13/cobra"
 )
 
@@ -89,6 +89,6 @@ func verifySource(ctx context.Context, conf *config.Config) error {
 		return fmt.Errorf("%w: %w", ErrSourceVerify, err)
 	}
 
-	slog.Info("Upstream verification succeeded", "status", resp.Status, "size", bytes.Format(n))
+	slog.Info("Upstream verification succeeded", "status", resp.Status, "size", bytefmt.Encode(n))
 	return nil
 }
