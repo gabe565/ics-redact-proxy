@@ -12,12 +12,13 @@ import (
 
 	"gabe565.com/ics-redact-proxy/internal/config"
 	"gabe565.com/ics-redact-proxy/internal/server/middleware"
+	"gabe565.com/utils/bytefmt"
 	ics "github.com/arran4/golang-ical"
 )
 
 func ICS(conf *config.Config) http.HandlerFunc {
 	var lastSize atomic.Int64
-	lastSize.Store(32 * 1024)
+	lastSize.Store(32 * bytefmt.KiB)
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := middleware.LogFromContext(r.Context())
 		if !ok {

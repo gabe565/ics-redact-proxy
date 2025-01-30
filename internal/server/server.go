@@ -10,6 +10,7 @@ import (
 	"gabe565.com/ics-redact-proxy/internal/config"
 	"gabe565.com/ics-redact-proxy/internal/server/handlers"
 	icsmiddleware "gabe565.com/ics-redact-proxy/internal/server/middleware"
+	"gabe565.com/utils/bytefmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/httprate"
@@ -39,7 +40,7 @@ func ListenAndServe(ctx context.Context, conf *config.Config) error {
 		Addr:           conf.ListenAddress,
 		Handler:        r,
 		ReadTimeout:    10 * time.Second,
-		MaxHeaderBytes: 1024 * 1024, // 1MiB
+		MaxHeaderBytes: bytefmt.MiB,
 	}
 
 	group, ctx := errgroup.WithContext(ctx)
