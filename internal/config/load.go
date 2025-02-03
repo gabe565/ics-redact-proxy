@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-const EnvPrefix = "IAS_"
+const EnvPrefix = "ICS_"
 
 var ErrNoSource = errors.New("no source URL defined")
 
