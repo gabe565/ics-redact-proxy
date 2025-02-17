@@ -1,16 +1,15 @@
 package config
 
 import (
-	"log/slog"
-	"strings"
 	"time"
 
+	"gabe565.com/utils/slogx"
 	ics "github.com/arran4/golang-ical"
 )
 
 type Config struct {
-	LogLevel  string
-	LogFormat string
+	LogLevel  slogx.Level
+	LogFormat slogx.Format
 
 	NoVerify             bool
 	ListenAddress        string
@@ -28,8 +27,8 @@ type Config struct {
 
 func New() *Config {
 	return &Config{
-		LogLevel:  strings.ToLower(slog.LevelInfo.String()),
-		LogFormat: FormatAuto.String(),
+		LogLevel:  slogx.LevelInfo,
+		LogFormat: slogx.FormatAuto,
 
 		ListenAddress:        ":3000",
 		RealIPHeader:         true,

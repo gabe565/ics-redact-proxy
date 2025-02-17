@@ -14,7 +14,7 @@ ics-redact-proxy [flags]
   -h, --help                           help for ics-redact-proxy
       --listen-address string          Listen address (default ":3000")
       --log-format string              Log format (one of auto, color, plain, json) (default "auto")
-  -l, --log-level string               Log level (one of debug, info, warn, error) (default "info")
+  -l, --log-level string               Log level (one of trace, debug, info, warn, error) (default "info")
       --new-calendar-name string       If set, calendar name will be changed to this value
       --new-event-summary string       If set, event summaries will be changed to this value (default "Unavailable")
       --no-verify                      Skips source verification request on startup

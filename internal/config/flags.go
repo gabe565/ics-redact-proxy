@@ -3,6 +3,7 @@ package config
 import (
 	"strings"
 
+	"gabe565.com/utils/slogx"
 	"github.com/spf13/pflag"
 )
 
@@ -25,8 +26,8 @@ const (
 )
 
 func (c *Config) RegisterFlags(f *pflag.FlagSet) {
-	f.StringVarP(&c.LogLevel, FlagLogLevel, "l", c.LogLevel, "Log level (one of debug, info, warn, error)")
-	f.StringVar(&c.LogFormat, FlagLogFormat, c.LogFormat, "Log format (one of "+strings.Join(LogFormatStrings(), ", ")+")")
+	f.VarP(&c.LogLevel, FlagLogLevel, "l", "Log level (one of "+strings.Join(slogx.LevelStrings(), ", ")+")")
+	f.Var(&c.LogFormat, FlagLogFormat, "Log format (one of "+strings.Join(slogx.FormatStrings(), ", ")+")")
 
 	f.BoolVar(&c.NoVerify, FlagNoVerify, c.NoVerify, "Skips source verification request on startup")
 	f.StringVar(&c.ListenAddress, FlagListenAddress, c.ListenAddress, "Listen address")

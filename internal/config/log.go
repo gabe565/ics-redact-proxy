@@ -3,64 +3,35 @@ package config
 import (
 	"io"
 	"log/slog"
-	"strings"
 	"time"
 
+	"gabe565.com/utils/slogx"
 	"gabe565.com/utils/termx"
 	"github.com/lmittmann/tint"
 )
 
-//go:generate go run github.com/dmarkham/enumer -type LogFormat -trimprefix Format -transform lower -text
-
-type LogFormat uint8
-
-const (
-	FormatAuto LogFormat = iota
-	FormatColor
-	FormatPlain
-	FormatJSON
-)
-
 func (c *Config) InitLog(w io.Writer) {
-	var level slog.Level
-	if err := level.UnmarshalText([]byte(c.LogLevel)); err != nil {
-		defer func() {
-			slog.Warn("Invalid log level. Defaulting to info.", "value", c.LogLevel)
-		}()
-		level = slog.LevelInfo
-		c.LogLevel = strings.ToLower(level.String())
-	}
-
-	var format LogFormat
-	if err := format.UnmarshalText([]byte(c.LogFormat)); err != nil {
-		defer func() {
-			slog.Warn("Invalid log format. Defaulting to auto.", "value", c.LogFormat)
-		}()
-		format = FormatAuto
-		c.LogFormat = format.String()
-	}
-
-	InitLog(w, level, format)
+	InitLog(w, c.LogLevel, c.LogFormat)
 }
 
-func InitLog(w io.Writer, level slog.Level, format LogFormat) {
+func InitLog(w io.Writer, level slogx.Level, format slogx.Format) {
 	switch format {
-	case FormatJSON:
+	case slogx.FormatJSON:
 		slog.SetDefault(slog.New(slog.NewJSONHandler(w, &slog.HandlerOptions{
-			Level: level,
+			Level: slog.Level(level),
 		})))
 	default:
 		var color bool
 		switch format {
-		case FormatAuto:
+		case slogx.FormatAuto:
 			color = termx.IsColor(w)
-		case FormatColor:
+		case slogx.FormatColor:
 			color = true
 		}
 
 		slog.SetDefault(slog.New(
 			tint.NewHandler(w, &tint.Options{
-				Level:      level,
+				Level:      slog.Level(level),
 				TimeFormat: time.DateTime,
 				NoColor:    !color,
 			}),

@@ -6,7 +6,7 @@
 | `ICS_HASH_UID` | Replace event UID with a hash. The UID can leak domains and IP addresses so this option is recommended. | `true` |
 | `ICS_LISTEN_ADDRESS` | Listen address | `:3000` |
 | `ICS_LOG_FORMAT` | Log format (one of auto, color, plain, json) | `auto` |
-| `ICS_LOG_LEVEL` | Log level (one of debug, info, warn, error) | `info` |
+| `ICS_LOG_LEVEL` | Log level (one of trace, debug, info, warn, error) | `info` |
 | `ICS_NEW_CALENDAR_NAME` | If set, calendar name will be changed to this value | ` ` |
 | `ICS_NEW_EVENT_SUMMARY` | If set, event summaries will be changed to this value | `Unavailable` |
 | `ICS_NO_VERIFY` | Skips source verification request on startup | `false` |
