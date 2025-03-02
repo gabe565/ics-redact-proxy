@@ -3,7 +3,7 @@ module gabe565.com/ics-redact-proxy
 go 1.24.0
 
 require (
-	gabe565.com/utils v0.0.0-20250217005250-f306fa7738cd
+	gabe565.com/utils v0.0.0-20250302063333-ede73b14282c
 	github.com/arran4/golang-ical v0.3.2
 	github.com/go-chi/chi/v5 v5.2.1
 	github.com/go-chi/httprate v0.14.1

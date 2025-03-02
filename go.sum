@@ -1,5 +1,5 @@
-gabe565.com/utils v0.0.0-20250217005250-f306fa7738cd h1:yIF1LBavwbZnIl7b4Gc/RFALrwrCa2CrE6Zv6cSOqpQ=
-gabe565.com/utils v0.0.0-20250217005250-f306fa7738cd/go.mod h1:8IpokjLTL2meO6pWztDzfN95olyT6P8ip3HjKu/ri9o=
+gabe565.com/utils v0.0.0-20250302063333-ede73b14282c h1:740ifPX0340EHhAPnr5PJ5FgpDFMX3EEmd8CMLcSi5I=
+gabe565.com/utils v0.0.0-20250302063333-ede73b14282c/go.mod h1:zPhcEoKWZOPz7CH+g3nzkKY/AOs+QEo9SokKKkJyq2U=
 github.com/arran4/golang-ical v0.3.2 h1:MGNjcXJFSuCXmYX/RpZhR2HDCYoFuK8vTPFLEdFC3JY=
 github.com/arran4/golang-ical v0.3.2/go.mod h1:xblDGxxIUMWwFZk9dlECUlc1iXNV65LJZOTHLVwu8bo=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
