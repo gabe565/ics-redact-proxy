@@ -11,7 +11,7 @@ require (
 	github.com/lmittmann/tint v1.0.7
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.6
-	golang.org/x/sync v0.11.0
+	golang.org/x/sync v0.12.0
 )
 
 require (
