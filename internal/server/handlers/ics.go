@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"crypto/sha1" //nolint:gosec
+	"crypto/sha256"
 	"encoding/hex"
 	"io"
 	"net/http"
@@ -68,7 +68,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 
 				if conf.HashUID {
 					if uid := event.GetProperty(ics.ComponentPropertyUniqueId); uid != nil {
-						checksum := sha1.Sum([]byte(uid.Value)) //nolint:gosec
+						checksum := sha256.Sum256([]byte(uid.Value))
 						uid.Value = hex.EncodeToString(checksum[:])
 					}
 				}
