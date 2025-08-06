@@ -49,6 +49,7 @@ func New() *Config {
 			string(ics.ComponentPropertyStatus),
 			string(ics.ComponentPropertyTransp),
 			string(ics.ComponentPropertyUniqueId),
+			string(ics.ComponentPropertyRecurrenceId),
 		},
 		NewEventSummary: "Unavailable",
 		HashUID:         true,

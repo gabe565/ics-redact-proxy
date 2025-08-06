@@ -9,7 +9,7 @@ ics-redact-proxy [flags]
 ### Options
 
 ```
-      --event-allow-fields strings     Allowed event fields (default [CREATED,DTEND,DTSTART,DTSTAMP,EXDATE,EXRULE,LAST-MODIFIED,RDATE,RRULE,SEQUENCE,STATUS,TRANSP,UID])
+      --event-allow-fields strings     Allowed event fields (default [CREATED,DTEND,DTSTART,DTSTAMP,EXDATE,EXRULE,LAST-MODIFIED,RDATE,RRULE,SEQUENCE,STATUS,TRANSP,UID,RECURRENCE-ID])
       --hash-uid                       Replace event UID with a hash. The UID can leak domains and IP addresses so this option is recommended. (default true)
   -h, --help                           help for ics-redact-proxy
       --listen-address string          Listen address (default ":3000")
