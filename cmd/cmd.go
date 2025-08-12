@@ -72,7 +72,7 @@ func verifySource(ctx context.Context, conf *config.Config) error {
 		return fmt.Errorf("%w: %w", ErrSourceVerify, err)
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := conf.Client.Do(req)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrSourceVerify, err)
 	}

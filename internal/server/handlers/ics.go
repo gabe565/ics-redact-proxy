@@ -32,7 +32,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			return
 		}
 
-		resp, err := http.DefaultClient.Do(req)
+		resp, err := conf.Client.Do(req)
 		if err != nil {
 			logger.Error("Failed to get ics", "error", err)
 			http.Error(w, http.StatusText(http.StatusServiceUnavailable), http.StatusServiceUnavailable)

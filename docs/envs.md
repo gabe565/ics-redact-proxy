@@ -4,6 +4,7 @@
 | --- | --- | --- |
 | `ICS_EVENT_ALLOW_FIELDS` | Allowed event fields | `CREATED,DTEND,DTSTART,DTSTAMP,EXDATE,EXRULE,LAST-MODIFIED,RDATE,RRULE,SEQUENCE,STATUS,TRANSP,UID,RECURRENCE-ID` |
 | `ICS_HASH_UID` | Replace event UID with a hash. The UID can leak domains and IP addresses so this option is recommended. | `true` |
+| `ICS_INSECURE_SKIP_TLS_VERIFY` | Skip TLS verification of source URL | `false` |
 | `ICS_LISTEN_ADDRESS` | Listen address | `:3000` |
 | `ICS_LOG_FORMAT` | Log format (one of auto, color, plain, json) | `auto` |
 | `ICS_LOG_LEVEL` | Log level (one of trace, debug, info, warn, error) | `info` |

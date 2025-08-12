@@ -1,8 +1,11 @@
 package config
 
 import (
+	"crypto/tls"
+	"net/http"
 	"time"
 
+	"gabe565.com/utils/httpx"
 	"gabe565.com/utils/slogx"
 	ics "github.com/arran4/golang-ical"
 )
@@ -10,6 +13,8 @@ import (
 type Config struct {
 	LogLevel  slogx.Level
 	LogFormat slogx.Format
+	UserAgent string
+	Client    *http.Client
 
 	NoVerify             bool
 	ListenAddress        string
@@ -20,11 +25,12 @@ type Config struct {
 	RateLimitMaxRequests int
 	RateLimitInterval    time.Duration
 
-	SourceURL        string
-	EventAllowFields []string
-	NewCalendarName  string
-	NewEventSummary  string
-	HashUID          bool
+	SourceURL             string
+	InsecureSkipTLSVerify bool
+	EventAllowFields      []string
+	NewCalendarName       string
+	NewEventSummary       string
+	HashUID               bool
 }
 
 func New() *Config {
@@ -55,5 +61,21 @@ func New() *Config {
 		},
 		NewEventSummary: "Unavailable",
 		HashUID:         true,
+	}
+}
+
+func (c *Config) NewHTTPTransport() *httpx.UserAgentTransport {
+	transport := http.DefaultTransport.(*http.Transport).Clone() //nolint:errcheck
+	transport.TLSClientConfig = &tls.Config{
+		InsecureSkipVerify: c.InsecureSkipTLSVerify, //nolint:gosec
+	}
+
+	return httpx.NewUserAgentTransport(transport, c.UserAgent)
+}
+
+func (c *Config) NewHTTPClient() *http.Client {
+	return &http.Client{
+		Transport: c.NewHTTPTransport(),
+		Timeout:   60 * time.Second,
 	}
 }

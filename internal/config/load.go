@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"gabe565.com/utils/cobrax"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -32,6 +33,9 @@ func (c *Config) Load(cmd *cobra.Command) error {
 	if c.SourceURL == "" {
 		return ErrNoSource
 	}
+
+	c.UserAgent = cobrax.BuildUserAgent(cmd)
+	c.Client = c.NewHTTPClient()
 	return nil
 }
 

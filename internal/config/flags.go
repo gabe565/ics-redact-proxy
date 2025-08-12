@@ -20,11 +20,12 @@ const (
 	FlagRateLimitMaxRequests = "rate-limit-max-requests"
 	FlagRateLimitInterval    = "rate-limit-interval"
 
-	FlagSourceURL        = "source-url"
-	FlagEventAllowFields = "event-allow-fields"
-	FlagNewCalendarName  = "new-calendar-name"
-	FlagNewEventSummary  = "new-event-summary"
-	FlagHashUID          = "hash-uid"
+	FlagSourceURL             = "source-url"
+	FlagInsecureSkipTLSVerify = "insecure-skip-tls-verify"
+	FlagEventAllowFields      = "event-allow-fields"
+	FlagNewCalendarName       = "new-calendar-name"
+	FlagNewEventSummary       = "new-event-summary"
+	FlagHashUID               = "hash-uid"
 )
 
 func (c *Config) RegisterFlags(f *pflag.FlagSet) {
@@ -47,6 +48,9 @@ func (c *Config) RegisterFlags(f *pflag.FlagSet) {
 	)
 
 	f.StringVar(&c.SourceURL, FlagSourceURL, c.SourceURL, "Source iCal URL")
+	f.BoolVar(&c.InsecureSkipTLSVerify, FlagInsecureSkipTLSVerify, c.InsecureSkipTLSVerify,
+		"Skip TLS verification of source URL",
+	)
 	f.StringSliceVar(&c.EventAllowFields, FlagEventAllowFields, c.EventAllowFields, "Allowed event fields")
 	f.StringVar(&c.NewCalendarName, FlagNewCalendarName, c.NewCalendarName,
 		"If set, calendar name will be changed to this value",
