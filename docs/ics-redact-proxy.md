@@ -22,6 +22,8 @@ ics-redact-proxy [flags]
       --rate-limit-max-requests int    Rate limiter max requests per IP (default 5)
       --real-ip-header                 Get client IP address from the "Real-IP" header (default true)
       --source-url string              Source iCal URL
+      --tls-cert-path string           TLS certificate path for HTTPS listener
+      --tls-key-path string            TLS key path for HTTPS listener
       --token token                    Enables token auth (requests will require a token GET parameter)
   -v, --version                        version for ics-redact-proxy
 ```

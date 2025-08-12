@@ -14,4 +14,6 @@
 | `ICS_RATE_LIMIT_MAX_REQUESTS` | Rate limiter max requests per IP | `5` |
 | `ICS_REAL_IP_HEADER` | Get client IP address from the "Real-IP" header | `true` |
 | `ICS_SOURCE_URL` | Source iCal URL | ` ` |
+| `ICS_TLS_CERT_PATH` | TLS certificate path for HTTPS listener | ` ` |
+| `ICS_TLS_KEY_PATH` | TLS key path for HTTPS listener | ` ` |
 | `ICS_TOKEN` | Enables token auth (requests will require a `token` GET parameter) | ` ` |

@@ -13,6 +13,8 @@ type Config struct {
 
 	NoVerify             bool
 	ListenAddress        string
+	TLSCertPath          string
+	TLSKeyPath           string
 	Tokens               []string
 	RealIPHeader         bool
 	RateLimitMaxRequests int

@@ -13,6 +13,8 @@ const (
 
 	FlagNoVerify             = "no-verify"
 	FlagListenAddress        = "listen-address"
+	FlagTLSCertPath          = "tls-cert-path"
+	FlagTLSKeyPath           = "tls-key-path"
 	FlagToken                = "token"
 	FlagRealIPHeader         = "real-ip-header"
 	FlagRateLimitMaxRequests = "rate-limit-max-requests"
@@ -31,6 +33,8 @@ func (c *Config) RegisterFlags(f *pflag.FlagSet) {
 
 	f.BoolVar(&c.NoVerify, FlagNoVerify, c.NoVerify, "Skips source verification request on startup")
 	f.StringVar(&c.ListenAddress, FlagListenAddress, c.ListenAddress, "Listen address")
+	f.StringVar(&c.TLSCertPath, FlagTLSCertPath, c.TLSCertPath, "TLS certificate path for HTTPS listener")
+	f.StringVar(&c.TLSKeyPath, FlagTLSKeyPath, c.TLSKeyPath, "TLS key path for HTTPS listener")
 	f.StringSliceVar(&c.Tokens, FlagToken, c.Tokens,
 		"Enables token auth (requests will require a `token` GET parameter)",
 	)
