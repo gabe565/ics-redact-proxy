@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"slices"
 
 	"gabe565.com/ics-redact-proxy/internal/config"
 	ics "github.com/arran4/golang-ical"
@@ -94,7 +95,8 @@ func ParseAndFilter(conf *config.Config, r io.Reader) (*ics.Calendar, error) { /
 				if err != nil {
 					return nil, err
 				}
-				if co == nil {
+
+				if co == nil || !slices.Contains(conf.Components, line.Value) {
 					continue
 				}
 
