@@ -98,8 +98,8 @@ func ParseAndFilter(conf *config.Config, r io.Reader) (*ics.Calendar, error) { /
 					continue
 				}
 
-				if event, ok := co.(*ics.VEvent); ok {
-					FilterEvent(conf, event)
+				if base := baseOf(co); base != nil {
+					FilterComponent(conf, base)
 				}
 				cal.Components = append(cal.Components, co)
 			default:
@@ -117,4 +117,19 @@ func ParseAndFilter(conf *config.Config, r io.Reader) (*ics.Calendar, error) { /
 	}
 
 	return cal, nil
+}
+
+func baseOf(component any) *ics.ComponentBase {
+	switch t := component.(type) {
+	case *ics.VEvent:
+		return &t.ComponentBase
+	case *ics.VTodo:
+		return &t.ComponentBase
+	case *ics.VJournal:
+		return &t.ComponentBase
+	case *ics.VBusy:
+		return &t.ComponentBase
+	default:
+		return nil
+	}
 }
