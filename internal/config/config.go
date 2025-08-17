@@ -28,7 +28,7 @@ type Config struct {
 	SourceURL             string
 	InsecureSkipTLSVerify bool
 	Components            []string
-	EventAllowFields      []string
+	ComponentFields       []string
 	NewCalendarName       string
 	NewEventSummary       string
 	HashUID               bool
@@ -48,7 +48,7 @@ func New() *Config {
 			string(ics.ComponentVTimezone),
 			string(ics.ComponentVEvent),
 		},
-		EventAllowFields: []string{
+		ComponentFields: []string{
 			string(ics.ComponentPropertyCreated),
 			string(ics.ComponentPropertyDtEnd),
 			string(ics.ComponentPropertyDtStart),

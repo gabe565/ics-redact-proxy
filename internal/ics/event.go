@@ -11,7 +11,7 @@ import (
 
 func FilterComponent(conf *config.Config, c *ics.ComponentBase) {
 	c.Properties = slices.DeleteFunc(c.Properties, func(property ics.IANAProperty) bool {
-		return !slices.Contains(conf.EventAllowFields, property.IANAToken)
+		return !slices.Contains(conf.ComponentFields, property.IANAToken)
 	})
 	c.Properties = slices.Clip(c.Properties)
 
