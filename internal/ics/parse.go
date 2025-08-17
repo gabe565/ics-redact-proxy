@@ -31,7 +31,7 @@ var (
 	ErrMalformed           = errors.New("malformed calendar")
 )
 
-func ParseAndFilter(conf *config.Config, r io.Reader) (*ics.Calendar, error) { //nolint:gocognit,funlen
+func ParseAndFilter(conf *config.Config, r io.Reader) (*ics.Calendar, error) { //nolint:gocognit,cyclop,funlen
 	state := stateBegin
 	cal := &ics.Calendar{}
 	stream := ics.NewCalendarStream(r)
@@ -77,7 +77,9 @@ func ParseAndFilter(conf *config.Config, r io.Reader) (*ics.Calendar, error) { /
 				}
 				state = stateEnd
 			default:
-				cal.CalendarProperties = append(cal.CalendarProperties, ics.CalendarProperty{BaseProperty: *line})
+				if slices.Contains(conf.CalendarFields, line.IANAToken) {
+					cal.CalendarProperties = append(cal.CalendarProperties, ics.CalendarProperty{BaseProperty: *line})
+				}
 			}
 			if state != stateComponents {
 				break

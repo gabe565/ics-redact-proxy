@@ -9,6 +9,7 @@ ics-redact-proxy [flags]
 ### Options
 
 ```
+      --calendar-fields strings        Allowed calendar fields (default [PRODID,VERSION,CALSCALE,METHOD,X-WR-CALNAME,X-WR-TIMEZONE,NAME])
       --component-fields strings       Allowed event fields (default [CREATED,DTEND,DTSTART,DTSTAMP,EXDATE,EXRULE,LAST-MODIFIED,RDATE,RRULE,SEQUENCE,STATUS,TRANSP,UID,RECURRENCE-ID])
       --components strings             Allowed calendar components (default [VTIMEZONE,VEVENT])
       --hash-uid                       Replace event UID with a hash. The UID can leak domains and IP addresses so this option is recommended. (default true)

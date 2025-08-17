@@ -27,6 +27,7 @@ type Config struct {
 
 	SourceURL             string
 	InsecureSkipTLSVerify bool
+	CalendarFields        []string
 	Components            []string
 	ComponentFields       []string
 	NewCalendarName       string
@@ -44,6 +45,15 @@ func New() *Config {
 		RateLimitMaxRequests: 5,
 		RateLimitInterval:    10 * time.Second,
 
+		CalendarFields: []string{
+			string(ics.PropertyProductId),
+			string(ics.PropertyVersion),
+			string(ics.PropertyCalscale),
+			string(ics.PropertyMethod),
+			string(ics.PropertyXWRCalName),
+			string(ics.PropertyXWRTimezone),
+			string(ics.PropertyName),
+		},
 		Components: []string{
 			string(ics.ComponentVTimezone),
 			string(ics.ComponentVEvent),

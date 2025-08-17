@@ -22,6 +22,7 @@ const (
 
 	FlagSourceURL             = "source-url"
 	FlagInsecureSkipTLSVerify = "insecure-skip-tls-verify"
+	FlagCalendarFields        = "calendar-fields"
 	FlagComponents            = "components"
 	FlagComponentFields       = "component-fields"
 	FlagNewCalendarName       = "new-calendar-name"
@@ -52,6 +53,7 @@ func (c *Config) RegisterFlags(f *pflag.FlagSet) {
 	f.BoolVar(&c.InsecureSkipTLSVerify, FlagInsecureSkipTLSVerify, c.InsecureSkipTLSVerify,
 		"Skip TLS verification of source URL",
 	)
+	f.StringSliceVar(&c.CalendarFields, FlagCalendarFields, c.CalendarFields, "Allowed calendar fields")
 	f.StringSliceVar(&c.Components, FlagComponents, c.Components, "Allowed calendar components")
 	f.StringSliceVar(&c.ComponentFields, FlagComponentFields, c.ComponentFields, "Allowed event fields")
 	f.StringVar(&c.NewCalendarName, FlagNewCalendarName, c.NewCalendarName,
