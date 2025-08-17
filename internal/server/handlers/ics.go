@@ -1,19 +1,16 @@
 package handlers
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"io"
 	"net/http"
-	"slices"
 	"strings"
 	"sync/atomic"
 	"time"
 
 	"gabe565.com/ics-redact-proxy/internal/config"
+	myics "gabe565.com/ics-redact-proxy/internal/ics"
 	"gabe565.com/ics-redact-proxy/internal/server/middleware"
 	"gabe565.com/utils/bytefmt"
-	ics "github.com/arran4/golang-ical"
 )
 
 func ICS(conf *config.Config) http.HandlerFunc {
@@ -49,34 +46,11 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			return
 		}
 
-		cal, err := ics.ParseCalendar(resp.Body)
+		cal, err := myics.ParseAndFilter(conf, resp.Body)
 		if err != nil {
 			logger.Error("Failed to parse ics", "error", err)
 			http.Error(w, http.StatusText(http.StatusServiceUnavailable), http.StatusServiceUnavailable)
 			return
-		}
-
-		for _, event := range cal.Components {
-			if event, ok := event.(*ics.VEvent); ok {
-				event.Properties = slices.DeleteFunc(event.Properties, func(property ics.IANAProperty) bool {
-					return !slices.Contains(conf.EventAllowFields, property.IANAToken)
-				})
-
-				if conf.NewEventSummary != "" {
-					event.SetSummary(conf.NewEventSummary)
-				}
-
-				if conf.HashUID {
-					if uid := event.GetProperty(ics.ComponentPropertyUniqueId); uid != nil {
-						checksum := sha256.Sum256([]byte(uid.Value))
-						uid.Value = hex.EncodeToString(checksum[:])
-					}
-				}
-			}
-		}
-
-		if conf.NewCalendarName != "" {
-			cal.SetName(conf.NewCalendarName)
 		}
 
 		var buf strings.Builder
