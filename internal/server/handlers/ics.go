@@ -1,11 +1,11 @@
 package handlers
 
 import (
+	"bytes"
 	"io"
 	"net/http"
-	"strings"
+	"strconv"
 	"sync/atomic"
-	"time"
 
 	"gabe565.com/ics-redact-proxy/internal/config"
 	myics "gabe565.com/ics-redact-proxy/internal/ics"
@@ -47,7 +47,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			return
 		}
 
-		var buf strings.Builder
+		var buf bytes.Buffer
 		buf.Grow(int(lastSize.Load()))
 
 		if err := myics.Filter(conf, &buf, resp.Body); err != nil {
@@ -59,6 +59,7 @@ func ICS(conf *config.Config) http.HandlerFunc {
 		lastSize.Store(int64(buf.Len()))
 
 		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")
-		http.ServeContent(w, r, "", time.Time{}, strings.NewReader(buf.String()))
+		w.Header().Set("Content-Length", strconv.Itoa(buf.Len()))
+		_, _ = buf.WriteTo(w)
 	}
 }

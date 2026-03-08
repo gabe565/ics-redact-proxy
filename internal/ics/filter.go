@@ -1,11 +1,11 @@
 package ics
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
 	"slices"
-	"strings"
 
 	"gabe565.com/ics-redact-proxy/internal/config"
 	ics "github.com/arran4/golang-ical"
@@ -32,7 +32,7 @@ var (
 	ErrMalformed           = errors.New("malformed calendar")
 )
 
-func Filter(conf *config.Config, out *strings.Builder, in io.Reader) error { //nolint:gocognit,gocyclo,cyclop,funlen
+func Filter(conf *config.Config, out *bytes.Buffer, in io.Reader) error { //nolint:gocognit,gocyclo,cyclop,funlen
 	state := stateBegin
 	stream := ics.NewCalendarStream(in)
 	var wroteName bool
