@@ -2,7 +2,7 @@
 
 | Name | Usage | Default |
 | --- | --- | --- |
-| `ICS_CALENDAR_FIELDS` | Allowed calendar fields | `PRODID,VERSION,CALSCALE,METHOD,X-WR-CALNAME,X-WR-TIMEZONE,NAME` |
+| `ICS_CALENDAR_FIELDS` | Allowed calendar fields | `PRODID,VERSION,CALSCALE,METHOD,X-WR-TIMEZONE` |
 | `ICS_COMPONENT_FIELDS` | Allowed event fields | `CREATED,DTEND,DTSTART,DTSTAMP,EXDATE,EXRULE,LAST-MODIFIED,RDATE,RRULE,SEQUENCE,STATUS,TRANSP,UID,RECURRENCE-ID` |
 | `ICS_COMPONENTS` | Allowed calendar components | `VTIMEZONE,VEVENT` |
 | `ICS_HASH_UID` | Replace event UID with a hash. The UID can leak domains and IP addresses so this option is recommended. | `true` |

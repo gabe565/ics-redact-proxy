@@ -16,6 +16,7 @@ import (
 func ICS(conf *config.Config) http.HandlerFunc {
 	var lastSize atomic.Int64
 	lastSize.Store(32 * bytefmt.KiB)
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := middleware.LogFromContext(r.Context())
 		if !ok {
@@ -46,20 +47,15 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			return
 		}
 
-		cal, err := myics.ParseAndFilter(conf, resp.Body)
-		if err != nil {
+		var buf strings.Builder
+		buf.Grow(int(lastSize.Load()))
+
+		if err := myics.Filter(conf, &buf, resp.Body); err != nil {
 			logger.Error("Failed to parse ics", "error", err)
 			http.Error(w, http.StatusText(http.StatusServiceUnavailable), http.StatusServiceUnavailable)
 			return
 		}
 
-		var buf strings.Builder
-		buf.Grow(int(lastSize.Load()))
-		if err := cal.SerializeTo(&buf); err != nil {
-			logger.Error("Failed to serialize ics", "error", err)
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			return
-		}
 		lastSize.Store(int64(buf.Len()))
 
 		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")

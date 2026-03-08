@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"slices"
+	"strings"
 
 	"gabe565.com/ics-redact-proxy/internal/config"
 	ics "github.com/arran4/golang-ical"
@@ -31,10 +32,15 @@ var (
 	ErrMalformed           = errors.New("malformed calendar")
 )
 
-func ParseAndFilter(conf *config.Config, r io.Reader) (*ics.Calendar, error) { //nolint:gocognit,cyclop,funlen
+func Filter(conf *config.Config, out *strings.Builder, in io.Reader) error { //nolint:gocognit,gocyclo,cyclop,funlen
 	state := stateBegin
-	cal := &ics.Calendar{}
-	stream := ics.NewCalendarStream(r)
+	stream := ics.NewCalendarStream(in)
+	var wroteName bool
+	serializeConfig := &ics.SerializationConfiguration{
+		MaxLength:         75,
+		PropertyMaxLength: 75,
+		NewLine:           string(ics.NewLine),
+	}
 
 	for lineNum := 0; ; lineNum++ {
 		l, err := stream.ReadLine()
@@ -42,7 +48,7 @@ func ParseAndFilter(conf *config.Config, r io.Reader) (*ics.Calendar, error) { /
 			if errors.Is(err, io.EOF) {
 				break
 			}
-			return cal, err
+			return err
 		}
 		if l == nil || len(*l) == 0 {
 			continue
@@ -50,10 +56,10 @@ func ParseAndFilter(conf *config.Config, r io.Reader) (*ics.Calendar, error) { /
 
 		line, err := ics.ParseProperty(*l)
 		if err != nil {
-			return nil, fmt.Errorf("%w %d: %w", ErrParsingLine, lineNum, err)
+			return fmt.Errorf("%w %d: %w", ErrParsingLine, lineNum, err)
 		}
 		if line == nil {
-			return nil, fmt.Errorf("%w %d", ErrParsingCalendarLine, lineNum)
+			return fmt.Errorf("%w %d", ErrParsingCalendarLine, lineNum)
 		}
 
 		switch state {
@@ -61,24 +67,41 @@ func ParseAndFilter(conf *config.Config, r io.Reader) (*ics.Calendar, error) { /
 			switch line.IANAToken {
 			case begin:
 				if line.Value != vcalendar {
-					return nil, fmt.Errorf("%w: expected a vcalendar", ErrMalformed)
+					return fmt.Errorf("%w: expected a vcalendar", ErrMalformed)
 				}
+				_ = line.SerializeTo(out, serializeConfig)
 				state = stateProperties
 			default:
-				return nil, fmt.Errorf("%w: expected begin", ErrMalformed)
+				return fmt.Errorf("%w: expected begin", ErrMalformed)
 			}
 		case stateProperties:
 			switch line.IANAToken {
 			case begin:
+				if conf.NewCalendarName != "" && !wroteName {
+					nameProps := []*ics.BaseProperty{
+						{IANAToken: string(ics.PropertyName), Value: conf.NewCalendarName},
+						{IANAToken: string(ics.PropertyXWRCalName), Value: conf.NewCalendarName},
+					}
+					for _, prop := range nameProps {
+						_ = prop.SerializeTo(out, serializeConfig)
+					}
+				}
+
 				state = stateComponents
 			case end:
 				if line.Value != vcalendar {
-					return nil, fmt.Errorf("%w: expected end", ErrMalformed)
+					return fmt.Errorf("%w: expected end", ErrMalformed)
 				}
+				_ = line.SerializeTo(out, serializeConfig)
 				state = stateEnd
 			default:
-				if slices.Contains(conf.CalendarFields, line.IANAToken) {
-					cal.CalendarProperties = append(cal.CalendarProperties, ics.CalendarProperty{BaseProperty: *line})
+				if conf.NewCalendarName != "" &&
+					(line.IANAToken == string(ics.PropertyName) || line.IANAToken == string(ics.PropertyXWRCalName)) {
+					wroteName = true
+					line.Value = conf.NewCalendarName
+					_ = line.SerializeTo(out, serializeConfig)
+				} else if slices.Contains(conf.CalendarFields, line.IANAToken) {
+					_ = line.SerializeTo(out, serializeConfig)
 				}
 			}
 			if state != stateComponents {
@@ -89,13 +112,14 @@ func ParseAndFilter(conf *config.Config, r io.Reader) (*ics.Calendar, error) { /
 			switch line.IANAToken {
 			case end:
 				if line.Value != vcalendar {
-					return nil, fmt.Errorf("%w: expected end", ErrMalformed)
+					return fmt.Errorf("%w: expected end", ErrMalformed)
 				}
+				_ = line.SerializeTo(out, serializeConfig)
 				state = stateEnd
 			case begin:
 				co, err := ics.GeneralParseComponent(stream, line)
 				if err != nil {
-					return nil, err
+					return err
 				}
 
 				if co == nil || !slices.Contains(conf.Components, line.Value) {
@@ -105,22 +129,19 @@ func ParseAndFilter(conf *config.Config, r io.Reader) (*ics.Calendar, error) { /
 				if base := baseOf(co); base != nil {
 					FilterComponent(conf, base)
 				}
-				cal.Components = append(cal.Components, co)
+
+				_ = co.SerializeTo(out, serializeConfig)
 			default:
-				return nil, fmt.Errorf("%w: expected begin or end", ErrMalformed)
+				return fmt.Errorf("%w: expected begin or end", ErrMalformed)
 			}
 		case stateEnd:
-			return nil, fmt.Errorf("%w: unexpected end", ErrMalformed)
+			return fmt.Errorf("%w: unexpected end", ErrMalformed)
 		default:
-			return nil, fmt.Errorf("%w: bad state", ErrMalformed)
+			return fmt.Errorf("%w: bad state", ErrMalformed)
 		}
 	}
 
-	if conf.NewCalendarName != "" {
-		cal.SetName(conf.NewCalendarName)
-	}
-
-	return cal, nil
+	return nil
 }
 
 func baseOf(component any) *ics.ComponentBase {

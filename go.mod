@@ -4,7 +4,7 @@ go 1.26.1
 
 require (
 	gabe565.com/utils v0.0.0-20251001054419-00a1424779a7
-	github.com/arran4/golang-ical v0.3.3
+	github.com/arran4/golang-ical v0.3.4
 	github.com/go-chi/chi/v5 v5.2.5
 	github.com/go-chi/httprate v0.15.0
 	github.com/jedib0t/go-pretty/v6 v6.7.8
