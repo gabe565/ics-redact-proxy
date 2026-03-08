@@ -48,7 +48,8 @@ func ICS(conf *config.Config) http.HandlerFunc {
 		}
 
 		var buf bytes.Buffer
-		buf.Grow(int(lastSize.Load()))
+		n := int(lastSize.Load())
+		buf.Grow(n)
 
 		if err := myics.Filter(conf, &buf, resp.Body); err != nil {
 			logger.Error("Failed to parse ics", "error", err)
@@ -56,7 +57,9 @@ func ICS(conf *config.Config) http.HandlerFunc {
 			return
 		}
 
-		lastSize.Store(int64(buf.Len()))
+		if n != 0 && n != buf.Len() {
+			lastSize.CompareAndSwap(int64(n), int64(buf.Len()))
+		}
 
 		w.Header().Set("Content-Type", "text/calendar; charset=utf-8")
 		w.Header().Set("Content-Length", strconv.Itoa(buf.Len()))
