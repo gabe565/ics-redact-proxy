@@ -95,12 +95,15 @@ func Filter(conf *config.Config, out *bytes.Buffer, in io.Reader) error { //noli
 				_ = line.SerializeTo(out, serializeConfig)
 				state = stateEnd
 			default:
-				if conf.NewCalendarName != "" &&
-					(line.IANAToken == string(ics.PropertyName) || line.IANAToken == string(ics.PropertyXWRCalName)) {
-					wroteName = true
-					line.Value = conf.NewCalendarName
-					_ = line.SerializeTo(out, serializeConfig)
-				} else if slices.Contains(conf.CalendarFields, line.IANAToken) {
+				if slices.Contains(conf.CalendarFields, line.IANAToken) {
+					switch ics.Property(line.IANAToken) {
+					case ics.PropertyName, ics.PropertyXWRCalName:
+						if conf.NewCalendarName != "" {
+							wroteName = true
+							line.Value = conf.NewCalendarName
+						}
+					}
+
 					_ = line.SerializeTo(out, serializeConfig)
 				}
 			}

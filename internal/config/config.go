@@ -50,7 +50,9 @@ func New() *Config {
 			string(ics.PropertyVersion),
 			string(ics.PropertyCalscale),
 			string(ics.PropertyMethod),
+			string(ics.PropertyXWRCalName),
 			string(ics.PropertyXWRTimezone),
+			string(ics.PropertyName),
 		},
 		Components: []string{
 			string(ics.ComponentVTimezone),
