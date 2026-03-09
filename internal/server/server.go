@@ -5,6 +5,9 @@ import (
 	"errors"
 	"log/slog"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"gabe565.com/ics-redact-proxy/internal/config"
@@ -14,7 +17,6 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/httprate"
-	"golang.org/x/sync/errgroup"
 )
 
 func ListenAndServe(ctx context.Context, conf *config.Config) error {
@@ -44,29 +46,40 @@ func ListenAndServe(ctx context.Context, conf *config.Config) error {
 		MaxHeaderBytes: bytefmt.MiB,
 	}
 
-	group, ctx := errgroup.WithContext(ctx)
+	errCh := make(chan error, 1)
 
-	group.Go(func() error {
+	go func() {
 		log := slog.With("address", conf.ListenAddress)
+		var err error
 		if conf.TLSCertPath != "" && conf.TLSKeyPath != "" {
 			log.Info("Listening for https connections")
-			return server.ListenAndServeTLS(conf.TLSCertPath, conf.TLSKeyPath)
+			err = server.ListenAndServeTLS(conf.TLSCertPath, conf.TLSKeyPath)
+		} else {
+			log.Info("Listening for http connections")
+			err = server.ListenAndServe()
 		}
-		log.Info("Listening for http connections")
-		return server.ListenAndServe()
-	})
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
+			errCh <- err
+		}
+	}()
 
-	group.Go(func() error {
-		<-ctx.Done()
-		slog.Info("Gracefully shutting down server")
-		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 60*time.Second)
-		defer shutdownCancel()
+	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
+	defer cancel()
 
-		return server.Shutdown(shutdownCtx)
-	})
+	select {
+	case <-ctx.Done():
+		ctx, cancelTimeout := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancelTimeout()
 
-	if err := group.Wait(); !errors.Is(err, http.ErrServerClosed) {
+		ctx, cancelSignal := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
+		defer cancelSignal()
+
+		slog.Info("Gracefully stopping server")
+		if err := server.Shutdown(ctx); err != nil && !errors.Is(err, context.DeadlineExceeded) {
+			return err
+		}
+		return nil
+	case err := <-errCh:
 		return err
 	}
-	return nil
 }

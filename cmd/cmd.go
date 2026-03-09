@@ -7,9 +7,6 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 
 	"gabe565.com/ics-redact-proxy/internal/config"
 	"gabe565.com/ics-redact-proxy/internal/server"
@@ -58,10 +55,7 @@ func run(cmd *cobra.Command, _ []string) error {
 		}
 	}
 
-	ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
-	defer cancel()
-
-	return server.ListenAndServe(ctx, conf)
+	return server.ListenAndServe(cmd.Context(), conf)
 }
 
 var ErrSourceVerify = errors.New("source verification failed")
